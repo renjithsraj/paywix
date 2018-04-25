@@ -7,7 +7,7 @@ __email__ = 'renjithsraj@live.com'
 __version__ = '0.1.0'
 
 # Payment gateway files
-from paywix.pg import payu
+from paywix import payu
 
 
 # Route to Payu
