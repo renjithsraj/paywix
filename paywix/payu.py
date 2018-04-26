@@ -12,16 +12,20 @@ PAYMENT_URLS = {
     "TEST": "https://sandboxsecure.payu.in/_payment"
 }
 SERVICE_PROVIDER = "payu_paisa"
+ACTION_REQUIRED_PARAMS = ['txnid', 'amount', 'productinfo', 'firstname', 'email', 'phone']
 
 
 def initiate(payu_data):
-    hashSequence = "key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10"
+    for each_param in ACTION_REQUIRED_PARAMS:
+        if payu_data.get(each_param, None) in ['', None]:
+            raise Exception('%s is mandatory' % (each_param))
+    hash_sequence = "key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10"
     hash_string = ""
-    hashVarsSeq = hashSequence.split('|')
+    hash_vars_seq = hash_sequence.split('|')
     payu_data['key'] = PAYU_KEY
     response_data = {}
     payu_data['amount'] = str(payu_data['amount'])
-    for i in hashVarsSeq:
+    for i in hash_vars_seq:
         try:
             hash_string += str(payu_data[i])
             response_data[i] = payu_data[i]
@@ -57,9 +61,9 @@ def check_hash(data):
     productinfo = data.get("productinfo")
     email = data.get("email")
     if data.get('additionalCharges'):
-        additionalCharges = data["additionalCharges"]
-        retHashSeq = additionalCharges + '|' + PAYU_SALT + '|' + status + '|||||||||||' + email + '|' + firstname + '|' + productinfo + '|' + amount + '|' + txnid + '|' + key
+        additional_charges = data["additionalCharges"]
+        ret_hash_seq = additional_charges + '|' + PAYU_SALT + '|' + status + '|||||||||||' + email + '|' + firstname + '|' + productinfo + '|' + amount + '|' + txnid + '|' + key
     else:
-        retHashSeq = PAYU_SALT + '|' + status + '|||||||||||' + email + '|' + firstname + '|' + productinfo + '|' + amount + '|' + txnid + '|' + key
-        hashh = hashlib.sha512(retHashSeq.encode('utf-8')).hexdigest().lower()
-    return (hashh == posted_hash, retHashSeq, hashh)
+        ret_hash_seq = PAYU_SALT + '|' + status + '|||||||||||' + email + '|' + firstname + '|' + productinfo + '|' + amount + '|' + txnid + '|' + key
+        hashh = hashlib.sha512(ret_hash_seq.encode('utf-8')).hexdigest().lower()
+    return (hashh == posted_hash, ret_hash_seq, hashh)
