@@ -1,5 +1,5 @@
 pip==10.0.1
-django
+django==2.0.4
 requests
 
 
