@@ -9,7 +9,6 @@ install: # => 5
     - pip install -r requirements.txt
 before_install:
   pip install codecov
-  pip install django==$DJANGO --quiet
 after_success:
   codecov
 
