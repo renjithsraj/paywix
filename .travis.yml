@@ -3,11 +3,13 @@ python:
   - "3.6"
   - "3.5"
 script: nosetests
+env:
+  - DJANGO=2.0.4
 install: # => 5
-    - pip install -r requirements_dev.txt
+    - pip install -r requirements.txt
 before_install:
   pip install codecov
-  pip install django
+  pip install django==$DJANGO --quiet
 after_success:
   codecov
 
