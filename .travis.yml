@@ -3,7 +3,10 @@ python:
   - "3.6"
   - "3.5"
 script: nosetests
+install: # => 5
+    - pip install -r requirements_dev.txt
 before_install:
   pip install codecov
 after_success:
   codecov
+
