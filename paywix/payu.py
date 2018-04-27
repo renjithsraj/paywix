@@ -18,7 +18,7 @@ ACTION_REQUIRED_PARAMS = ['txnid', 'amount', 'productinfo', 'firstname', 'email'
 def initiate(payu_data):
     for each_param in ACTION_REQUIRED_PARAMS:
         if payu_data.get(each_param, None) in ['', None]:
-            raise Exception('%s is mandatory' % (each_param))
+            raise Exception('%s is mandatory' % each_param)
     hash_sequence = "key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10"
     hash_string = ""
     hash_vars_seq = hash_sequence.split('|')
