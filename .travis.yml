@@ -7,6 +7,7 @@ install: # => 5
     - pip install -r requirements_dev.txt
 before_install:
   pip install codecov
+  pip install django
 after_success:
   codecov
 
