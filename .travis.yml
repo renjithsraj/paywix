@@ -3,8 +3,7 @@ python:
   - "3.6"
   - "3.5"
 script: nosetests
-env:
-  - DJANGO=2.0.4
+
 install: # => 5
     - pip install -r requirements.txt
 before_install:
