@@ -1,11 +1,9 @@
 paywix
 =====
-PayWix is a python wrapper for handle payment gateway integrations in Django based applications,
-This is the advanced version of `payu_biz` in this package only support for payu payment gateway
-but in the case of `paywix` it will support almost all the payment gateways. so you don't need to
-to much worry about the integrations part just import it and go on.
 
-The beta version 1.0.2 is deployed in PYPI with support of payu payment gateway.
+`PayWix` is a python wrapper for handle payment gateway integrations in Django based applications, This is the advanced version of `payu_biz` in this package only support for `payu` payment gateway but in the case of `paywix`, it will support almost all the payment gateways. so you don't need to much worry about the integrations part, Just import it and go on.
+
+The beta version 1.0.2 is deployed in PYPI with the support of payu payment gateway.
 
 Note
 ----
