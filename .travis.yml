@@ -4,8 +4,13 @@ python:
   - "3.5"
 script: nosetests
 
-install: # => 5
-    - pip install -r requirements.txt
+env:
+  - DJANGO_VERSION=2.0.4
+  
+install:
+  - pip install -q Django==$DJANGO_VERSION
+  - python setup.py -q install
+
 before_install:
   pip install codecov
 after_success:
