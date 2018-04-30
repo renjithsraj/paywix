@@ -9,6 +9,22 @@ Note
 ----
 * This package is working fine on Python3 with django2.X versions. not compatable with previous versions
  
+### How to install
+Install ```paywix``` in your virtualenv using ```pip``` command.
+```
+	pip install paywix
+```
+### Payu payment gateway integration in django.
+
+step 1 :
+
+Add in your ``` INSTALLED_APPS ```
+
+	
+		INSTALLED_APPS = [
+			'-------------',
+		   	 'paypy',
+		]
 
 This package will include
 -------------------------
