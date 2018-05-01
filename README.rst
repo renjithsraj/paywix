@@ -38,8 +38,8 @@ Paywix providing following payment gateways support.
 
 Features
 --------
-* [Payu Payment gateway Integration in Django](../master/payu.md)
-* [Cashfree Payment gateway Integration in Django](../master/cashfree.md)
+* [Payu Payment gateway Integration in Django](https://github.com/Cadmus/paywix/blob/master/payu.md)
+* [Cashfree Payment gateway Integration in Django](https://github.com/Cadmus/paywix/blob/master/cashfree.md)
 
 
 Notes
