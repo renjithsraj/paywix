@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Renjith S Raj <renjithsraj@live.com>
+* Renjith S Raj <renjcithsraj@live.com>
 
 Contributors
 ------------
