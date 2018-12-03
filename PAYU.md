@@ -71,10 +71,8 @@ def checkout(request):
 
 # templates/payment_form.html
 
-for sample payment_form you can find it from the templates folder 
-change the templates styles as per your needs, in this templates
-you can make some fields hidden (success url, failure url and etc)
-please consider, provided templates is only for demo purpose 
+for sample payment_form you can find it from the templates folder change the templates styles 
+as per your needs, in this templates you can make some fields hidden (success url, failure url and etc) please consider, provided templates is only for demo purpose 
 
 
 # Success URL

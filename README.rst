@@ -21,3 +21,4 @@ pipenv install paywix # Install by pipenv
 
 ## How to use PAYWIX
 
+- [payu](https://github.com/Cadmus/paywix/blob/master/PAYU.md)
