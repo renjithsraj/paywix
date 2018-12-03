@@ -21,9 +21,11 @@ setup(
     author="Renjith S Raj",
     author_email='renjithsraj@live.com',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Beta',
+        ''
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
+        'Framework :: Django',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
@@ -42,6 +44,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/cadmus/paywix',
-    version='2.0',
+    version='2.1',
     zip_safe=False,
 )
