@@ -1,38 +1,23 @@
-paywix
-=====
+# Paywix
 
-`PayWix` is a python wrapper for handle payment gateway integrations in Django based applications, This is the advanced version of `payu_biz` in this package only support for `payu` payment gateway but in the case of `paywix`, it will support almost all the payment gateways. so you don't need to much worry about the integrations part, Just import it and go on.
+Paywix is a Django payment wrapper for Handling Various payment gateway integrations, Currently this package is supported for following payment gateways
 
-The beta version 1.0.2 is deployed in PYPI with the support of payu payment gateway.
+- Payu Payment Gateway
+- Cashfree Payment Gateway
 
-Note
-----
-* This package is working fine on Python3 with django2.X versions. not compatable with previous versions
+## Installation
 
-### How to install
-Install ```paywix``` in your virtualenv using ```pip``` command.
+Use any one the package manager  to install foobar
+- [pip](https://pip.pypa.io/en/stable/)
+- [pipenv](https://pipenv.readthedocs.io/en/latest/)
+
+```bash
+pip install paywix # Install by PIP
+
+pipenv install paywix # Install by pipenv
 ```
-	pip install paywix
-```
-### Payu payment gateway integration in django.
 
-step 1 :
+###### MAKE SURE ABOUT THE ENVIRONMENT IS ACTIVATED 
 
-Add in your ``` INSTALLED_APPS ```
+## How to use PAYWIX
 
-
-		INSTALLED_APPS = [
-			'-------------',
-		   	 'paypy',
-		]
-
-This package will include
--------------------------
-Paywix providing following payment gateways support.
-* Payu
-
-
-Notes
--------
-* The Package is working fine with latest version of django and python3.
-* It's in developement mode but for payu make transaction/verify transaction is working fine.
