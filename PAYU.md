@@ -4,6 +4,17 @@
 
 project/settings.py # Add following parameters 
 
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'paywix'
+]
+
 PAYU_MERCHANT_KEY = "mPXEdCTk" # Merchant key from payu
 PAYU_KEY = "mPXEdCTk"
 PAYU_SALT = "eWC5pLKLDY" # Merchant salt from payu
