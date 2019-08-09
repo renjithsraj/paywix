@@ -31,7 +31,13 @@ class PAYU(object):
             hash_string+='|'
         hash_string+=self.salt
         # Generate Hash
-        hashh = self.generate_hash(hash_string)
+        data.update({ 
+            'hash': self.generate_hash(hash_string), 
+            "": ""})
+
+
+
+        hashh = 
         data['merchant_key'] = self.mechent_key
         data['surl'] = self.success_url
         data['furl'] = self.failure_url
@@ -45,23 +51,20 @@ class PAYU(object):
         response = {}
         for item in data:
             data[item] = data[item][0]
-        status = data.get("status")
-        firstname = data.get("firstname")
-        amount = data.get("amount")
-        txnid = data.get("txnid")
+        s, f, m, t, k, p,e = data.get("status"), data.get("firstname"), 
+                data.get("amount"), data.get("txnid"), data.get("key"), 
+                data.get("productinfo") , data.get("email")
         posted_hash = data.get("hash")
-        key = data.get("key")
-        productinfo = data.get("productinfo")
-        email = data.get("email")
         if data.get('additionalCharges'):
             additional_charges = data["additionalCharges"]
-            ret_hash_seq = additional_charges + '|' + self.salt + '|' + status + '|||||||||||' + email + '|' + firstname + '|' + productinfo + '|' + amount + '|' + txnid + '|' + key
+            ret_hash_seq = additional_charges + '|' + self.salt + '|' + s + '|||||||||||' + e + '|' + f + '|' + p + '|' + m + '|' + t + '|' + k
         else:
-            ret_hash_seq = self.salt + '|' + status + '|||||||||||' + email + '|' + firstname + '|' + productinfo + '|' + amount + '|' + txnid + '|' + key
+            ret_hash_seq = self.salt + '|' + s + '|||||||||||' + e + '|' + f + '|' + p + '|' + m + '|' + t + '|' + k
         hashh = hashlib.sha512(ret_hash_seq.encode('utf-8')).hexdigest().lower()
-        response['data'] = data
-        response['hash_string'] = ret_hash_seq
-        response['generated_hash'] = hashh
-        response['recived_hash'] = posted_hash
-        response['verify_hash'] = hashh == posted_hash
-        return response
+        return response.update{
+            'data': data,
+            'hash_string': ret_hash_seq,
+            'generated_hash': hashh,
+            'recived_hash': posted_hash,
+            'verify_token': posted_hash == hashh
+        })
