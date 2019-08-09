@@ -4,15 +4,18 @@ import hashlib
 
 class PAYU(object):
     
-    def __init__(self):
-        self.test_url = "https://sandboxsecure.payu.in/_payment"
-        self.secure_url = 'https://secure.payu.in/_payment'
-        self.base_url = self.test_url if settings.PAYMENT_MODE == 'TEST' else self.secure_url
-        self.mechent_key = settings.PAYU_MERCHANT_KEY
-        self.salt = settings.PAYU_SALT
-        self.key = settings.PAYU_KEY
-        self.success_url = settings.PAYU_SUCCESS_URL
-        self.failure_url = settings.PAYU_FAILURE_URL
+    def __init__(self, mode, salt, m_key, key, s_url, f_url):
+
+        urls_dict = { 
+                    "TEST" : "https://sandboxsecure.payu.in/_payment", 
+                    "LIVE": "https://secure.payu.in/_payment"
+                }
+        self.base_url = urls_dict.get(self.mode, 'TEST')
+        self.mechent_key = m_key
+        self.salt = salt
+        self.key = key
+        self.success_url = s_url
+        self.failure_url = f_url
 
     def generate_hash(self, hash_string):
         hashh= hashlib.sha512(hash_string.encode('utf-8')).hexdigest().lower()
@@ -31,20 +34,15 @@ class PAYU(object):
             hash_string+='|'
         hash_string+=self.salt
         # Generate Hash
-        data.update({ 
-            'hash': self.generate_hash(hash_string), 
-            "": ""})
-
-
-
-        hashh = 
-        data['merchant_key'] = self.mechent_key
-        data['surl'] = self.success_url
-        data['furl'] = self.failure_url
-        data['hashh'] = hashh
-        data['hash_string'] = hash_string
-        data['service_provider'] = 'payu_paisa'
-        data['action'] = self.base_url
+        data.update({
+            'hashh': self.generate_hash(hash_string),
+            'merchant_key': self.mechent_key,
+            'surl': self.success_url,
+            'furl': self.failure_url,
+            'hash_string': hash_string,
+            'service_provider': 'payu_paisa',
+            'action' : self.base_url
+        })
         return data
     
     def check_hash(self, data):
