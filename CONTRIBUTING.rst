@@ -15,7 +15,7 @@ Types of Contributions
 Report Bugs
 ~~~~~~~~~~~
 
-Report bugs at https://github.com/cadmus/paywix/issues.
+Report bugs at https://github.com/renjithsraj/paywix/issues.
 
 If you are reporting a bug, please include:
 
