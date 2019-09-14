@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="paywix",
-    version="2.1.1",
+    version="3.0.0",
     author="Renjith S Raj",
     author_email="renjithsraj@live.com",
     description="Multi payment gateway wrapper for Django based applications",

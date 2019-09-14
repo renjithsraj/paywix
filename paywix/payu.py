@@ -10,7 +10,6 @@ class PAYU(object):
             "TEST": "https://sandboxsecure.payu.in/_payment",
             "LIVE": "https://secure.payu.in/_payment"
         }
-        print ("the p", p)
         for param in ['merchant_key', 'merchant_salt', 'mode',
                       'success_url', 'failure_url']:
             if not p.get(param):
