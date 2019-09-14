@@ -1,47 +1,22 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+import setuptools
 
-"""The setup script."""
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
-from setuptools import setup, find_packages
-
-with open('README.rst') as readme_file:
-    readme = readme_file.read()
-
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
-
-requirements = [ ]
-
-setup_requirements = [ ]
-
-test_requirements = [ ]
-
-setup(
+setuptools.setup(
+    name="paywix",
+    version="2.1.1",
     author="Renjith S Raj",
-    author_email='renjithsraj@live.com',
+    author_email="renjithsraj@live.com",
+    description="Multi payment gateway wrapper for Django based applications",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/renjithsraj/paywix",
+    packages=setuptools.find_packages(),
     classifiers=[
-        'Development Status :: 5 - Beta',
-        ''
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Framework :: Django',
-        'Natural Language :: English',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7.4',
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
     ],
-    description="Multi payment gateway for django based applications.",
-    install_requires=requirements,
-    license="MIT license",
-    long_description=readme + '\n\n' + history,
-    include_package_data=True,
-    keywords='paywix',
-    name='paywix',
-    packages=find_packages(include=['paywix']),
-    setup_requires=setup_requirements,
-    test_suite='tests',
-    tests_require=test_requirements,
-    url='https://github.com/renjithsraj/paywix',
-    version='2.1.1',
-    zip_safe=False,
+    python_requires='>=3.6',
 )
