@@ -1,22 +1,39 @@
-import setuptools
+#!/usr/bin/pythoni
 
-with open("README.md", "r") as fh:
-    long_description = fh.read()
+from setuptools import setup
+from os import path
 
-setuptools.setup(
-    name="paywix",
-    version="3.0.0",
-    author="Renjith S Raj",
-    author_email="renjithsraj@live.com",
-    description="Multi payment gateway wrapper for Django based applications",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/renjithsraj/paywix",
-    packages=setuptools.find_packages(),
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
+p = path.abspath(path.dirname(__file__))
+with open(path.join(p, 'README.rst')) as f:
+    README = f.read()
+
+setup(
+    name='paywix',
+    version='1',
+    description='Multipayment gateway wrapper for Django',
+    long_description=README,
+    long_description_content_type='text/markdown',
+
+    install_requires=[
+        "django"
     ],
-    python_requires='>=3.6',
+    url='https://github.com/renjithsraj/paywix',
+    maintainer='Renjith S Raj',
+    maintainer_email='renjithsraj@live.com',
+    download_url='',
+
+    classifiers=[
+          'Development Status :: 4 - Beta',
+          'Environment :: Console',
+          'Intended Audience :: Developers',
+          'Operating System :: MacOS :: MacOS X',
+          'Operating System :: Microsoft :: Windows',
+          'Operating System :: POSIX',
+          'Operating System :: Unix',
+          'Framework :: Django :: 2.2',
+          'Programming Language :: Python',
+          'Programming Language :: Python :: 3.7',
+          'Topic :: Software Development :: Libraries :: Python Modules',
+          'Topic :: Software Development'
+    ],
 )

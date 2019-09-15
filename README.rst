@@ -1,24 +1,34 @@
-# Paywix
+## PAYWIX
+paywix is a payment gateway wrapper for Django based applications, currently it's supporting following payment gateways
+  - Payu
 
-Paywix is a Django payment wrapper for Handling Various payment gateway integrations, Currently this package is supported for following payment gateways
+### Installation
 
-- Payu Payment Gateway
-- Cashfree Payment Gateway
+* Paywix requires [Django](https://www.djangoproject.com/download/)
+* Python > 3 Version
 
-## Installation
-
-Use any one the package manager  to install foobar
-- [pip](https://pip.pypa.io/en/stable/)
-- [pipenv](https://pipenv.readthedocs.io/en/latest/)
-
-```bash
-pip install paywix # Install by PIP
-
-pipenv install paywix # Install by pipenv
+```python
+$ pip install paywix
 ```
 
-###### MAKE SURE ABOUT THE ENVIRONMENT IS ACTIVATED 
+### Plugins
 
-## How to use PAYWIX
+Paywix is currently extended with the following plugins. Instructions on how to use them in your own application are detailed below.
 
-- [payu](https://github.com/renjithsraj/paywix/blob/master/PAYU.md)
+| Plugin | README |
+| ------ | ------ |
+| PAYU | https://github.com/renjithsraj/paywix/blob/master/PAYU.md |
+
+### Todos
+
+ - Cashfree
+ - Stripe
+ - Braintree
+ - Paytm
+ - CCavenue
+
+License
+----
+
+MIT
+
