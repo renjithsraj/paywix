@@ -68,7 +68,10 @@ To Integrate PayUmoney Bolt Checkout, you must :
 
 ## Make sure
 * Included the success / failure urls in the settings.py
-* `It should be included your checkout views
+* It should be included your checkout views
+    ``` python
+    checkout views
     payu_data = payu.initate_transaction(data)
-   return render(request, 'payu_checkout.html', {"posted": payu_data})
-   `
+    return render(request, 'payu_checkout.html', {"posted": payu_data})
+   ```
+* Make sure you have added `csrf_exampt` in the success & failure views
