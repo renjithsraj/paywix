@@ -7,10 +7,6 @@ paywix is a payment gateway wrapper for Django based applications, currently it'
 * Paywix requires [Django](https://www.djangoproject.com/download/)
 * Python > 3 Version
 
-Please Take a look.
-
-> As normaly we have installed package with pip command, some time In MAC getting error like no module found while import, I don't know why this error is coming, but when I use **pipenv** it's works well.
-
 ```python
 1. pip install paywix
 2. pipenv install paywix
