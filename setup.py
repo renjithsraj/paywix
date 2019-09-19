@@ -1,6 +1,6 @@
 #!/usr/bin/pythoni
 
-from setuptools import setup
+from setuptools import setup, find_packages
 from os import path
 
 p = path.abspath(path.dirname(__file__))
@@ -9,11 +9,10 @@ with open(path.join(p, 'README.rst')) as f:
 
 setup(
     name='paywix',
-    version='1',
+    version='4.2',
     description='Multipayment gateway wrapper for Django',
     long_description=README,
     long_description_content_type='text/markdown',
-
     install_requires=[
         "django"
     ],
@@ -21,7 +20,8 @@ setup(
     maintainer='Renjith S Raj',
     maintainer_email='renjithsraj@live.com',
     download_url='',
-
+    packages=find_packages(),
+    include_package_data=True,
     classifiers=[
           'Development Status :: 4 - Beta',
           'Environment :: Console',
