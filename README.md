@@ -28,6 +28,9 @@ Paywix is currently extended with the following plugins. Instructions on how to 
  - Paytm
  - CCavenue
 
+## DEMO
+- [Payu Demo] (https://github.com/renjithsraj/paywix_demos)
+
 License
 ----
 
