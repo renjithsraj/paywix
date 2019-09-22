@@ -34,7 +34,7 @@ class PAYU(object):
         hashh = hashlib.sha512(hash_string.encode('utf-8')).hexdigest().lower()
         return hashh
 
-    def initate_transaction(self, data):
+    def initiate_transaction(self, data):
         for item in self.required_fields:
             if not data.get(item):
                 return Exception("{0} missing in the data".format(item))
@@ -49,6 +49,7 @@ class PAYU(object):
                 hash_string += ''
             hash_string += '|'
         hash_string += self.salt
+        print (hash_string)
         # Generate Hash
         data.update({
             'hashh': self.generate_hash(hash_string),
@@ -63,8 +64,6 @@ class PAYU(object):
 
     def check_hash(self, data):
         response = {}
-        for item in data:
-            data[item] = data[item][0]
         s, f, m, t, k, p, e = data.get("status"), data.get("firstname"), \
             data.get("amount"), data.get("txnid"), data.get("key"), \
             data.get("productinfo"), data.get("email")
@@ -76,10 +75,11 @@ class PAYU(object):
             ret_hash_seq = self.salt + '|' + s + '|||||||||||' + e + '|' + f + '|' + p + '|' + m + '|' + t + '|' + k
         hashh = hashlib.sha512(
             ret_hash_seq.encode('utf-8')).hexdigest().lower()
-        return response.update({
+        response.update({
             'data': data,
             'hash_string': ret_hash_seq,
             'generated_hash': hashh,
             'recived_hash': posted_hash,
             'verify_token': posted_hash == hashh
         })
+        return response
