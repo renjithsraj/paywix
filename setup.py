@@ -9,12 +9,13 @@ with open(path.join(p, 'README.rst')) as f:
 
 setup(
     name='paywix',
-    version='4.2',
+    version='4.3',
     description='Multipayment gateway wrapper for Django',
     long_description=README,
     long_description_content_type='text/markdown',
     install_requires=[
-        "django"
+        "django",
+        "pycrypto"
     ],
     url='https://github.com/renjithsraj/paywix',
     maintainer='Renjith S Raj',
