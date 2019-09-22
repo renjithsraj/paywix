@@ -63,7 +63,7 @@ To Integrate PayUmoney Bolt Checkout, you must :
                 # Payu form, will post the data to payu based on your mode selection, if you
                 # required more detils please go through : 
                 # https://github.com/renjithsraj/paywix/blob/master/paywix/templates/payu_checkout.html
-                payu_data = payu.initate_transaction(data)
+                payu_data = payu.initiate_transaction(data)
                 return render(request, 'payu_checkout.html', {"posted": payu_data})
             else:
                 return render(request, 'checkout.html', {"posted": payu_data})
