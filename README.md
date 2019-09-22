@@ -20,7 +20,7 @@ Paywix is currently extended with the following plugins. Instructions on how to 
 | Plugin | README |
 | ------ | ------ |
 | PAYU | https://github.com/renjithsraj/paywix/blob/master/PAYU.md |
-| PAYTM | https://github.com/renjithsraj/paywix/blob/master/PAYU.md |
+| PAYTM | https://github.com/renjithsraj/paywix/blob/master/PAYTM.md |
 
 ### Todos
 
