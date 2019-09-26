@@ -9,7 +9,7 @@ with open(path.join(p, 'README.rst')) as f:
 
 setup(
     name='paywix',
-    version='4.3',
+    version='4.3.4',
     description='Multipayment gateway wrapper for Django',
     long_description=README,
     long_description_content_type='text/markdown',

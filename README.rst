@@ -2,6 +2,7 @@
 paywix is a payment gateway wrapper for Django based applications, currently it's supporting following payment gateways
   - Payu
   - Paytm
+  - Cashfree
 
 ### Installation
 
@@ -20,17 +21,16 @@ Paywix is currently extended with the following plugins. Instructions on how to 
 | Plugin | README |
 | ------ | ------ |
 | PAYU | https://github.com/renjithsraj/paywix/blob/master/PAYU.md |
-| PAYTM | https://github.com/renjithsraj/paywix/blob/master/PAYU.md |
+| PAYTM | https://github.com/renjithsraj/paywix/blob/master/PAYTM.md |
+| CASHFREE | https://github.com/renjithsraj/paywix/blob/master/CASHFREE.md |
 
 ### Todos
-
- - Cashfree
  - Stripe
  - Braintree
  - CCavenue
 
 ## DEMO
-- [Payu Demo] (https://github.com/renjithsraj/paywix_demos)
+- [Demo] (https://github.com/renjithsraj/paywix_demos)
 
 License
 ----
