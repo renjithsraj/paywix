@@ -30,6 +30,7 @@ class PayTm(object):
                            "CALLBACK_URL": self.callback_url})
         param_dict = data_dict
         param_dict["CHECKSUMHASH"] = Checksum.generate_checksum(data_dict, self.merchant_key)
+        param_dict.update({"action_url": self.txn_url})
         return param_dict
 
     def id_generater(self):

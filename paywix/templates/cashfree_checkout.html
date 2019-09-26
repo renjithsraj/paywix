@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cashfree-Payment Loading.....</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body onload="document.frm1.submit()">
+  <form action="{{postData.action_url}}" name="frm1" method="post">
+      <p>Please wait.......</p>
+      <input type="hidden" name="signature" value="{{postData.signature}}"/>
+      <input type="hidden" name="orderNote" value="{{postData.orderNote}}" />
+      <input type="hidden" name="orderCurrency" value="{{postData.orderCurrency}}" />
+      <input type="hidden" name="customerName" value="{{postData.customerName}}" />
+      <input type="hidden" name="customerEmail" value="{{postData.customerEmail}}" />
+      <input type="hidden" name="customerPhone" value="{{postData.customerPhone}}" />
+      <input type="hidden" name="orderAmount" value="{{postData.orderAmount}}" />
+      <input type ="hidden" name="notifyUrl" value="{{postData.notifyUrl}}" />
+      <input type ="hidden" name="returnUrl" value="{{postData.returnUrl}}" />
+      <input type="hidden" name="appId" value="{{postData.appId}}"/>
+      <input type="hidden" name="orderId" value="{{postData.orderId}}"/>
+  </form>
+</body>
+</html>
