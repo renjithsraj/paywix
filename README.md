@@ -1,4 +1,7 @@
 # PAYWIX
+
+![waltter](https://user-images.githubusercontent.com/8171465/65796327-f2b18480-e189-11e9-944b-3ebb417b7750.png)
+
 paywix is a payment gateway wrapper for Django based applications, currently it's supporting following payment gateways
   - Payu
   - Paytm
