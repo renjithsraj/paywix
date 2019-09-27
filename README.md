@@ -31,7 +31,7 @@ Paywix is currently extended with the following plugins. Instructions on how to 
  - CCavenue
 
 ## DEMO
-- [Demo] (https://github.com/renjithsraj/paywix_demos)
+- [Demo](https://github.com/renjithsraj/paywix_demos)
 
 License
 ----
