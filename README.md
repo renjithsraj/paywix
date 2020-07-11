@@ -1,5 +1,5 @@
 
-# PACKAGE UNDER MAINTANCE - > FEEL FREE TO CONTACT ME
+# PACKAGE UNDER MAINTANCE - > FEEL FREE TO CONTACT ME [new version release by 18-07-2020]
 # renjithsraj@live.com.  # 9746272610
 
 
