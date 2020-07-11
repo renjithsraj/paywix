@@ -1,3 +1,25 @@
+
+# PACKAGE UNDER MAINTANCE - > FEEL FREE TO CONTACT ME
+# renjithsraj@live.com.  # 9746272610
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # PAYWIX
 
 paywix is a payment gateway wrapper for Django based applications, currently it's supporting following payment gateways
