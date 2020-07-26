@@ -1,14 +1,11 @@
-from paywix.models import PaywixData
+payu_config = {
+    "test": "https://sandboxsecure.payu.in/_payment",
+    "live": "https://secure.payu.in/_payment",
+    "api_test": "https://test.payumoney.com/payment/",
+    "api_live": "https://www.payumoney.com/payment/",
+}
 
-
-def save_db(data, transaction):
-    if transaction == 'init':
-        transaction = PaywixData.objects.create(
-            transaction_id=data['txnid'],
-            pg_type=data['pg_type'],
-            txn_amount=data['amount'],
-            txn_status="IN",
-            request_data=data
-        )
-    else:
-        print(data, transaction)
+required_data = {
+    "payu_request": ['txnid', 'amount', 'productinfo', 'firstname', 'email'],
+    "payu_payment_resp": ['transaction_ids']
+}

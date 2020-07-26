@@ -1,59 +1,50 @@
 import hashlib
-from django.conf import settings
-p = getattr(settings, 'PAYU_CONFIG', {})
+from utils import payu_config
+from exceptions import AccessModeException
+from decorators import validate_params
 
 
-class PAYU(object):
-    def __init__(self):
+class Payu():
 
-        urls_dict = {
-            "TEST": "https://sandboxsecure.payu.in/_payment",
-            "LIVE": "https://secure.payu.in/_payment"
-        }
-        for param in ['merchant_key', 'merchant_salt', 'mode',
-                      'success_url', 'failure_url']:
-            if not p.get(param):
-                raise Exception("{0} not included in the PAYUCONFIG".format(
-                    param))
-        self.base_url = urls_dict.get(p.get('mode', 'TEST'))
-        self.mechent_key = p.get('merchant_key')
-        self.salt = p.get('merchant_salt')
-        self.key = p.get('merchant_key')
-        self.success_url = p.get('success_url')
-        self.failure_url = p.get('failure_url')
-        self.required_fields = [
-            'txnid', 'amount', 'productinfo', 'firstname', 'email'
-        ]
+    def __init__(self, merchant_key, merchant_salt, s_url, f_url, mode='TEST',
+                 auth_header=None):
+        if mode.lower() not in ['test', 'live']:
+            raise AccessModeException(mode)
+        self.merchant_key = merchant_key
+        self.merchant_salt = merchant_salt
+        self.success_url = s_url
+        self.failure_url = f_url
+        self.base_url = payu_config.get(mode.lower(), 'test')
+        self.auth_header = auth_header
 
-    def generate_txnid(self):
+    def generate_txnid(self, prefix=None, limit=20):
         hash_object = hashlib.sha256(b'randint(0,20)')
-        txnid = hash_object.hexdigest()[0:20]
+        txnid = f'{prefix} {hash_object.hexdigest()[0:limit]}'
         return txnid
 
     def generate_hash(self, hash_string):
-        hashh = hashlib.sha512(hash_string.encode('utf-8')).hexdigest().lower()
-        return hashh
+        hash_value = hashlib.sha512(
+            hash_string.encode('utf-8')).hexdigest().lower()
+        return hash_value
 
-    def initiate_transaction(self, data):
-        for item in self.required_fields:
-            if not data.get(item):
-                return Exception("{0} missing in the data".format(item))
-        data['key'] = self.mechent_key
-        hashSequence = "key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10"
+    @validate_params('payu_request', 'payu', 'transaction')
+    def transaction(self, **kwargs):
+        kwargs.update({'key': self.merchant_key})
+        hashSequence = "key|txnid|amount|productinfo|firstname|email|udf1\
+            |udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10"
         hash_string = ''
         hashVarsSeq = hashSequence.split('|')
-        for i in hashVarsSeq:
+        for hash_str in hashVarsSeq:
             try:
-                hash_string += str(data[i])
+                hash_string += str(kwargs[hash_str])
             except Exception:
                 hash_string += ''
             hash_string += '|'
-        hash_string += self.salt
-        print (hash_string)
-        # Generate Hash
+        hash_string += self.merchant_salt
+        data = kwargs
         data.update({
             'hashh': self.generate_hash(hash_string),
-            'merchant_key': self.mechent_key,
+            'merchant_key': self.merchant_key,
             'surl': self.success_url,
             'furl': self.failure_url,
             'hash_string': hash_string,
@@ -62,24 +53,38 @@ class PAYU(object):
         })
         return data
 
-    def check_hash(self, data):
-        response = {}
-        s, f, m, t, k, p, e = data.get("status"), data.get("firstname"), \
-            data.get("amount"), data.get("txnid"), data.get("key"), \
-            data.get("productinfo"), data.get("email")
-        posted_hash = data.get("hash")
-        if data.get('additionalCharges'):
-            additional_charges = data["additionalCharges"]
-            ret_hash_seq = additional_charges + '|' + self.salt + '|' + s + '|||||||||||' + e + '|' + f + '|' + p + '|' + m + '|' + t + '|' + k
-        else:
-            ret_hash_seq = self.salt + '|' + s + '|||||||||||' + e + '|' + f + '|' + p + '|' + m + '|' + t + '|' + k
-        hashh = hashlib.sha512(
-            ret_hash_seq.encode('utf-8')).hexdigest().lower()
-        response.update({
-            'data': data,
-            'hash_string': ret_hash_seq,
-            'generated_hash': hashh,
-            'recived_hash': posted_hash,
-            'verify_token': posted_hash == hashh
+    def verify_transaction(self, response_data):
+        results = {}
+        status = response_data.get('status')
+        first_name = response_data.get('firstname')
+        amount = response_data.get('amount')
+        txnid = response_data.get('txnid')
+        response_key = response_data.get('key')
+        product_info = response_data.get('productinfo')
+        email = response_data.get('email')
+        response_hash = response_data.get("hash")
+        add_charge = response_data.get('additionalCharges')
+        hash_string = ""
+        if add_charge:
+            hash_string += f'{add_charge}|'
+
+        hash_string += f'{self.merchant_salt}|{status}|||||||||||{email}|{first_name}|\
+        {product_info}|{amount}|{txnid}|{response_key}'
+        generated_hash = self.generate_hash(hash_string)
+        results.update({"return_data": response_data})
+        results.update({
+            'hash_string': hash_string,
+            'generated_hash': generated_hash,
+            'recived_hash': response_hash,
+            'hash_verified': generated_hash == response_hash
         })
-        return response
+        return results
+
+    def generate_header(self):
+        header = {}
+        header.update({
+            "authorization": self.auth_header,
+            "content-type": "application/json",
+            "cache-control": "no-cache"
+        })
+        return header
