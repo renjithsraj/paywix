@@ -1,6 +1,6 @@
 from functools import wraps
-from utils import required_data
-from exceptions import RequiredDataException
+from paywix.utils import required_data
+from paywix.exceptions import RequiredDataException
 
 
 class validate_params(object):

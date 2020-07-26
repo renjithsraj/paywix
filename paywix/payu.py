@@ -1,7 +1,7 @@
 import hashlib
-from utils import payu_config
-from exceptions import AccessModeException
-from decorators import validate_params
+from paywix.utils import payu_config
+from paywix.exceptions import AccessModeException
+from paywix.decorators import validate_params
 
 
 class Payu():
@@ -68,8 +68,7 @@ class Payu():
         if add_charge:
             hash_string += f'{add_charge}|'
 
-        hash_string += f'{self.merchant_salt}|{status}|||||||||||{email}|{first_name}|\
-        {product_info}|{amount}|{txnid}|{response_key}'
+        hash_string += f'{self.merchant_salt}|{status}|||||||||||{email}|{first_name}|{product_info}|{amount}|{txnid}|{response_key}'
         generated_hash = self.generate_hash(hash_string)
         results.update({"return_data": response_data})
         results.update({

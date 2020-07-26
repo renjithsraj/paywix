@@ -9,7 +9,7 @@ with open(path.join(p, 'README.rst')) as f:
 
 setup(
     name='paywix',
-    version='1.0.0',
+    version='1.2.0',
     description='Multipayment gateway wrapper for Django',
     long_description=README,
     long_description_content_type='text/markdown',
@@ -22,18 +22,9 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     classifiers=[
-          'Development Status :: 4 - Beta',
-          'Environment :: Console',
-          'Intended Audience :: Developers',
-          'Operating System :: MacOS :: MacOS X',
-          'Operating System :: Microsoft :: Windows',
-          'Operating System :: POSIX',
-          'Operating System :: Unix',
-          'Framework :: Django :: 2.2',
-          'Programming Language :: Python',
-          'Programming Language :: Python :: 3.7',
-          'Programming Language :: Python :: 3.8.3',
-          'Topic :: Software Development :: Libraries :: Python Modules',
-          'Topic :: Software Development'
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
     ],
+    python_requires='>=3.6',
 )
