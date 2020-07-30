@@ -1,7 +1,11 @@
 import hashlib
-from paywix.utils import payu_config
+from paywix.utils import payu_config, payu_url_generator
 from paywix.exceptions import AccessModeException
 from paywix.decorators import validate_params
+import requests
+from urllib3.request import urlencode
+
+refund_api_commands = ['getRefundDetails', 'getRefundDetailsByPayment']
 
 
 class Payu():
@@ -16,6 +20,7 @@ class Payu():
         self.failure_url = f_url
         self.base_url = payu_config.get(mode.lower(), 'test')
         self.auth_header = auth_header
+        self.mode = mode
 
     def generate_txnid(self, prefix=None, limit=20):
         hash_object = hashlib.sha256(b'randint(0,20)')
@@ -87,3 +92,71 @@ class Payu():
             "cache-control": "no-cache"
         })
         return header
+
+    def make_query_params(self, data):
+        query_params = urlencode(data)
+        return query_params
+
+    def make_request(self, command, required_data, optionals=None):
+        api_mode = {"test": "api_test", "live": "api_live"}
+        mode = api_mode.get(self.mode.lower())
+        headers = self.generate_header()
+        required_data.update({'key': self.merchant_key})
+        service_url = payu_url_generator(
+            command, mode, refund_api=True if command in refund_api_commands else False)
+        service_url = service_url.format(**required_data)
+        if optionals:
+            query_params = self.make_query_params(optionals)
+            service_url += query_params
+        try:
+            response = requests.post(service_url, headers=headers)
+            # Consider any status other than 2xx an error
+            if not response.status_code // 100 == 2:
+                return {"status": response.status_code,
+                        "message": f"Error: Unexpected response {response.content}"
+                        }
+            json_obj = response.json()
+            return {"status": response.status_code, "result": json_obj}
+        except requests.exceptions.RequestException as e:
+            return {"status": 500, "message": f"Error: {e}"}
+
+    def getPaymentResponse(self, required_data, optionals={}):
+        if not required_data.get('ids'):
+            raise Exception(f"Parameter id's missing in required_data")
+        required_data['ids'] = "|".join(required_data['ids'])
+        response = self.make_request(
+            "getPaymentResponse", required_data, optionals=optionals)
+        return response
+
+    def chkMerchantTxnStatus(self, required_data):
+        if not required_data.get('ids'):
+            raise Exception(f"Parameter id's missing in required_data")
+        required_data['ids'] = "|".join(required_data['ids'])
+        response = self.make_request(
+            "chkMerchantTxnStatus", required_data)
+        return response
+
+    def refundPayment(self, required_data, optionals={}):
+        for key in ['payu_id', 'amount']:
+            if not required_data.get(key):
+                raise Exception(
+                    f"Mandatory {key} params missing in required_data")
+        response = self.make_request(
+            'refundPayment', required_data, optionals=optionals)
+        return response
+
+    def getRefundDetails(self, required_data):
+        if not required_data.get('refund_id'):
+            raise Exception(
+                f"Mandatory refund_id params missing in required_data")
+        response = self.make_request(
+            'getRefundDetails', required_data)
+        return response
+
+    def getRefundDetailsByPayment(self, required_data):
+        if not required_data.get('payu_id'):
+            raise Exception(
+                f"Mandatory payu_id params missing in required_data")
+        response = self.make_request(
+            'getRefundDetailsByPayment', required_data)
+        return response
