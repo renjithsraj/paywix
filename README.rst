@@ -1,6 +1,10 @@
 # PAYWIX
 
-paywix is a payment gateway wrapper for Django based applications, currently it's supporting following payment gateways
+Paywix is a lightweight SDK for payment processing for the python based applications, the package 
+was initially supported only with the Django framework. In the new version, the package is supported 
+by all python-based applications.
+
+### Currently supported Payment Gateways
   - Payu
 
 ### Installation
