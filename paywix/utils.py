@@ -15,7 +15,6 @@ service_urls = {
 }
 
 
-
 cashfree_config = {
     "test": "https://www.cashfree.com/checkout/post/submit",
     "live": "https://test.cashfree.com/billpay/checkout/post/submit",
@@ -57,6 +56,7 @@ required_data = {
     "payu_payment_resp": ['transaction_ids'],
     "cashfree_request": ['order_id', 'amount', 'name', 'phone', 'email']
 }
+
 
 def payu_url_generator(command, mode, refund_api=False):
     base_url = payu_config.get(mode)

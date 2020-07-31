@@ -20,4 +20,3 @@ class validate_params(object):
                     self.gateway, self.txn_type, missing_data)
             return func(*args, **kwargs)
         return callable
-
