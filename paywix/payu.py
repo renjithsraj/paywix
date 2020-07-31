@@ -120,7 +120,9 @@ class Payu():
         except requests.exceptions.RequestException as e:
             return {"status": 500, "message": f"Error: {e}"}
 
-    def getPaymentResponse(self, required_data, optionals={}):
+    def getPaymentResponse(self, required_data, optionals=None):
+        if optionals is None:
+            optionals = {}
         if not required_data.get('ids'):
             raise Exception(f"Parameter id's missing in required_data")
         required_data['ids'] = "|".join(required_data['ids'])
@@ -136,7 +138,9 @@ class Payu():
             "chkMerchantTxnStatus", required_data)
         return response
 
-    def refundPayment(self, required_data, optionals={}):
+    def refundPayment(self, required_data, optionals=None):
+        if optionals is None:
+            optionals = {}
         for key in ['payu_id', 'amount']:
             if not required_data.get(key):
                 raise Exception(
