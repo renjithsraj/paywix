@@ -1,6 +1,7 @@
-# PAYWIX
 ![Logo](https://user-images.githubusercontent.com/8171465/89018959-393bb680-d33a-11ea-86ee-2055b574f23e.png)
 
+
+# PAYWIX
 
 [![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/renjithsraj/paywix/?ref=repository-badge)
 
