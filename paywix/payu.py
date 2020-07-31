@@ -124,7 +124,7 @@ class Payu():
         if optionals is None:
             optionals = {}
         if not required_data.get('ids'):
-            raise Exception(f"Parameter id's missing in required_data")
+            raise Exception("Parameter id's missing in required_data")
         required_data['ids'] = "|".join(required_data['ids'])
         response = self.make_request(
             "getPaymentResponse", required_data, optionals=optionals)
@@ -132,7 +132,7 @@ class Payu():
 
     def chkMerchantTxnStatus(self, required_data):
         if not required_data.get('ids'):
-            raise Exception(f"Parameter id's missing in required_data")
+            raise Exception("Parameter id's missing in required_data")
         required_data['ids'] = "|".join(required_data['ids'])
         response = self.make_request(
             "chkMerchantTxnStatus", required_data)
@@ -152,7 +152,7 @@ class Payu():
     def getRefundDetails(self, required_data):
         if not required_data.get('refund_id'):
             raise Exception(
-                f"Mandatory refund_id params missing in required_data")
+                "Mandatory refund_id params missing in required_data")
         response = self.make_request(
             'getRefundDetails', required_data)
         return response
@@ -160,7 +160,7 @@ class Payu():
     def getRefundDetailsByPayment(self, required_data):
         if not required_data.get('payu_id'):
             raise Exception(
-                f"Mandatory payu_id params missing in required_data")
+                "Mandatory payu_id params missing in required_data")
         response = self.make_request(
             'getRefundDetailsByPayment', required_data)
         return response
