@@ -277,7 +277,7 @@ ID | PARAM | Description | type | mandatory|
 payment_Resp = payu.getPaymentResponse({"ids": ['172b0970-d073-11ea-8a7c-f0189853078a']})
 ```
 
-```json
+```javascript
 {
 status: 0
 message: "All txnIds are valid"
