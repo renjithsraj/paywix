@@ -466,7 +466,7 @@ ID | PARAM | Description | type | mandatory|
 ---|-------|-------------|------|----------|
 1 | required_data  | Mandataory Details {"payu_id": <transaction id from payu>| dict | Yes
 
-> Sample Check Merchant Transaction
+> Sample Get Refund Details by Payment Id
 
 ```python
     rrefund_details = payu.getRefundDetailsByPayment({'payu_id': 190783})
