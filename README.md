@@ -1,6 +1,6 @@
 ![Logo](https://user-images.githubusercontent.com/8171465/89018959-393bb680-d33a-11ea-86ee-2055b574f23e.png)
 
-# NEXT RELEASE 25-11-2020 with PAYTM and CASHFREE payement gateways.
+# NEXT RELEASE 10-02-2021
 
 
 # PAYWIX
