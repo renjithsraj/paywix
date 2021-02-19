@@ -1,7 +1,5 @@
 ![Logo](https://user-images.githubusercontent.com/8171465/89018959-393bb680-d33a-11ea-86ee-2055b574f23e.png)
 
-# NEXT RELEASE 10-02-2021
-
 
 # PAYWIX
 
@@ -27,10 +25,11 @@ Paywix is currently extended with the following plugins. Instructions on how to 
 
 | Plugin | README |
 | ------ | ------ |
-| PAYU | https://github.com/renjithsraj/paywix/blob/master/PAYU.md 
+| PAYU | https://github.com/renjithsraj/paywix/blob/master/PAYU.md|
+|------|----------------------------------------------------------|
+| PAYTM | https://github.com/renjithsraj/paywix/blob/master/PAYTM.md|
 
 ### Todos
- - Paytm
  - Cashfree
  - Stripe
  - Braintree

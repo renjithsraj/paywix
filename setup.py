@@ -9,7 +9,7 @@ with open(path.join(p, 'README.rst')) as f:
 
 setup(
     name='paywix',
-    version='1.3.0',
+    version='1.4.0',
     author="Renjith S Raj",
     author_email="renjithsraj@live.com",
     description='Paywix is a light weight payment processing sdk for python based applications.',
