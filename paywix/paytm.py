@@ -113,12 +113,12 @@ class Paytm(object):
         for param in required_params:
             if param not in data and data.get(param):
                 raise KeyError(f"{param} is required to proceed checkout data")
-        params_data = dict((k.upper(), v) for k, v in data.items())
+        params_data = {k.upper(): v for k, v in data.items()}
         params_data['MID'] = self.mid
         checksum = PaytmChecksum()
         params_data['CHECKSUMHASH'] = checksum.generate_signature(
             params_data, self.key)
-        if is_html == True:
+        if is_html is True:
             return self.generate_checkout_html(params_data)
         return params_data
 
@@ -134,5 +134,5 @@ class Paytm(object):
             resp.update(
                 checksum_data
             )
-        resp = dict((k.lower(), v) for k, v in resp.items())
+        resp = {k.lower(): v for k, v in resp.items()}
         return resp

@@ -32,7 +32,7 @@ class PaytmChecksum():
         encrypted_string = base64.b64decode(encrypted_string)
         c = AES.new(key.encode("utf8"), self.mode_cbc, self.iv.encode("utf8"))
         param = c.decrypt(encrypted_string)
-        if type(param) == bytes:
+        if type(param) is bytes:
             param = param.decode()
         return self.__unpad__(param)
 
