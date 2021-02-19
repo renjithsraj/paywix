@@ -37,7 +37,8 @@ class Paytm(object):
     def init_transaction(self, data):
         data['body']['mid'] = self.mid
         paytm_checksum = PaytmChecksum()
-        checksum = paytm_checksum.generate_signature(self.__make_data(data['body']), self.key)
+        checksum = paytm_checksum.generate_signature(
+            self.__make_data(data['body']), self.key)
         data['head'] = {
             "signature": checksum
         }
@@ -79,8 +80,8 @@ class Paytm(object):
         ''' Take inputs from data dict and appending dynamically into the input fields '''
         for key, value in param_dict.items():
             HTML += f"<input type='hidden' name='{key}' value='{value}'>"
-        
-        HTML +="""
+
+        HTML += """
                         </tbody>
                     </table>
                     <script type="text/javascript">
@@ -106,7 +107,7 @@ class Paytm(object):
             "EMAIL" : "CUSTOMER_EMAIL",   
         """
         required_params = [
-            'website', 'industry_type_id', 'channel_id', 'order_id', 'cust_id', 
+            'website', 'industry_type_id', 'channel_id', 'order_id', 'cust_id',
             'txn_amount', 'callback_url'
         ]
         for param in required_params:
@@ -115,7 +116,8 @@ class Paytm(object):
         params_data = dict((k.upper(), v) for k, v in data.items())
         params_data['MID'] = self.mid
         checksum = PaytmChecksum()
-        params_data['CHECKSUMHASH'] = checksum.generate_signature(params_data, self.key)
+        params_data['CHECKSUMHASH'] = checksum.generate_signature(
+            params_data, self.key)
         if is_html == True:
             return self.generate_checkout_html(params_data)
         return params_data
@@ -127,11 +129,10 @@ class Paytm(object):
         resp = data
         if data.get('CHECKSUMHASH'):
             checksum = PaytmChecksum()
-            checksum_data = checksum.verify_signature(data, self.key, data['CHECKSUMHASH'])
+            checksum_data = checksum.verify_signature(
+                data, self.key, data['CHECKSUMHASH'])
             resp.update(
                 checksum_data
             )
         resp = dict((k.lower(), v) for k, v in resp.items())
         return resp
-            
-    
