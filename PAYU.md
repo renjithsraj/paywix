@@ -3,6 +3,10 @@
 In this document will give the detailed information about the payu configuration for the python based applications.
 
 ------------
+### Example Project for payu
+
+- [payu django 3.1.6](https://github.com/renjithsraj/paywix/blob/master/payu_django.md "payu django 3.1.6")
+
 
 ### Setup account with PAYU setup account with PAYU
 
