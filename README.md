@@ -15,6 +15,7 @@ Paywix is a lightweight SDK for payment processing for the python based applicat
 
 ### Example Projects
   - [Payu Demo Django 3.1.6](https://github.com/renjithsraj/paywix_demos/tree/master/paywix_demo_3_1_6)
+  - [Paytm Demo Django 3.1.6] (https://github.com/renjithsraj/paywix_demos/tree/master/paywix_demo_3_1_6)
   
 ### Installation
 * Python > 3 Version
