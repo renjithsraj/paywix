@@ -103,3 +103,42 @@ html>
 You can pass this to the paytm_payment .html page which you have created in the template folder.
 
 ```
+
+## paytm.verify_response()
+
+This method is using to verify the response after success/failure payment transction with paytm, you have to include this method in your call back url. save the data for the future usage. 
+
+```python
+data = dict(request.POST.items()) # django
+resp = paytm.verify_response(data)
+```
+The `verify_response()` method will verify the paytm generated hash function with calculated hash from the system (paywix) and updated the same in the response. 
+
+resp
+```python
+{
+   "currency":"INR",
+   "gatewayname":"WALLET",
+   "respmsg":"Txn Success",
+   "bankname":"WALLET",
+   "paymentmode":"PPI",
+   "mid":"kGuPMZ17441871743529",
+   "respcode":"01",
+   "txnid":"20210225111212800110168076402386537",
+   "txnamount":"10.00",
+   "orderid":"1234567890123546755",
+   "status":"TXN_SUCCESS",
+   "banktxnid":"64139174",
+   "txndate":"2021-02-25 12:07:23.0",
+   "is_verified":true,
+   "paytm_hash":"87201b0a0a8ae59e3e2f4721b0632f02582924713eb933486788452d3d6f611333@7",
+   "calculated_hash":"87201b0a0a8ae59e3e2f4721b0632f02582924713eb933486788452d3d6f611333@7"
+}
+```
+You can save this details into your transaction table, this details required for the future access of paytm api's like refund and etc. 
+
+   `"is_verified":true` ->  paytm_hash and calculated hash are equal so we can say that the transaction is done by paytm only.
+   `"status":"TXN_SUCCESS",` ->  The staus key will give whether the traction is success or failed.
+> Please save all the data's from the response , some data will required for future communication with paytm like refund, checkout, transaction check and etc, 
+
+
