@@ -1,5 +1,5 @@
 payu_config = {
-    "test": "https://test.payu.in/_payment ",
+    "test": "https://test.payu.in/_payment",
     "live": "https://secure.payu.in/_payment",
     "api_test": "https://www.payumoney.com/sandbox/",
     "api_live": "https://www.payumoney.com/",
