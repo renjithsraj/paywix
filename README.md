@@ -4,6 +4,7 @@
 # PAYWIX
 
 [![DeepSource](https://static.deepsource.io/deepsource-badge-light-mini.svg)](https://deepsource.io/gh/renjithsraj/paywix/?ref=repository-badge)
+[![Downloads](https://static.pepy.tech/personalized-badge/paywix?period=total&units=international_system&left_color=black&right_color=orange&left_text=Downloads)](https://pepy.tech/project/paywix)
 
 Paywix is a lightweight SDK for payment processing for the python based applications, the package was initially supported only with the Django framework. In the new version, the package is supported by all python-based applications.
 
