@@ -2,6 +2,7 @@ from functools import wraps
 from paywix.config import PAYU_CONFIGS
 from paywix.exceptions import PaywixValidationException
 
+
 def validate_params(pg, action):
     """
         validate the function based on the args
@@ -27,5 +28,5 @@ def validate_params(pg, action):
                     action
                 )
             return func(*args, **kwargs)
-        return  wrapper
+        return wrapper
     return decorator

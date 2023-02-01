@@ -6,6 +6,7 @@ class ModeException(Exception):
                        f" requested args: {args}"
         super().__init__(self.message)
 
+
 class PaywixValidationException(Exception):
 
     def __init__(self, required_items, missing_items, pg, action):
@@ -16,4 +17,3 @@ class PaywixValidationException(Exception):
         self.message = f" {self.pg} required {self.required_items} to process {self.action}" \
                        f" requested data missing: {self.missing_items}"
         super().__init__(self.message)
-
