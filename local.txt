@@ -1,2 +1,2 @@
-tar czf ~/Desktop/paywix-1.1.1.tar.gz paywix
-pip install ~/Desktop/paywix-1.1.1.tar.gz
+tar czf ~/Desktop/paywix-2.0.tar.gz paywix
+pip install ~/Desktop/paywix-2.0.tar.gz
