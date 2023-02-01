@@ -30,7 +30,6 @@ class Payu:
         """
             Generate hash for requested arguments
         """
-        logging.info(f"Generating hash for requested params: {kwargs}")
         kwargs.update({'key': self.key})
         hash_seq_list = self.__HASH_SEQUENCE.split('|')
         hash_string = ""
@@ -188,7 +187,7 @@ class Payu:
         except requests.exceptions.RequestException as req_error:
             raise Exception(f"Timeout Error: {str(req_error)}")
         except Exception as e:
-            raise Exception(f"Unknown error occurred")
+            raise Exception(f"Unknown error occurred: {str(e)}")
 
     def verify_payment(self, *args, **kwargs):
         """
@@ -198,7 +197,7 @@ class Payu:
             reconcile with PayU’s database once you receive the response.
         """
         if len(kwargs.get('transaction_id')) == 0:
-            raise KeyError(f" Requested data doesn't contains required field: transaction_id")
+            raise KeyError(" Requested data doesn't contains required field: transaction_id")
         kwargs['command'] = "verify_payment"
         kwargs['var1'] = "|".join(kwargs.pop('transaction_id'))
         response = self.__make_request(**kwargs)
@@ -224,7 +223,7 @@ class Payu:
             This API is used to get the transaction response sent on surl/furl.
         """
         if not kwargs.get('transaction_id'):
-            raise KeyError(f" Requested data doesn't contains required field: transaction_id")
+            raise KeyError(" Requested data doesn't contains required field: transaction_id")
         kwargs['command'] = "get_ws_response"
         kwargs['var1'] = kwargs.pop('transaction_id')
         response = self.__make_request(**kwargs)
@@ -271,7 +270,6 @@ class Payu:
         kwargs['command'] = "get_transaction_info"
         kwargs['var1'] = kwargs.pop('date_time_from')
         kwargs['var2'] = kwargs.pop('date_time_to')
-        breakpoint()
         response = self.__make_request(**kwargs)
         return response
 
@@ -285,7 +283,7 @@ class Payu:
             to the output.
         """
         if len(kwargs.get('payment_id')) == 0:
-            raise KeyError(f" Requested data doesn't contains required field: payment_id")
+            raise KeyError(" Requested data doesn't contains required field: payment_id")
         kwargs['command'] = "get_TDR"
         kwargs['var1'] = kwargs.get('payment_id')
         response = self.__make_request(**kwargs)
