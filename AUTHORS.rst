@@ -9,5 +9,4 @@ Development Lead
 
 Contributors
 ------------
-
-None yet. Why not be the first?
+* Parthasarathy <sarathi475@gmail.com>

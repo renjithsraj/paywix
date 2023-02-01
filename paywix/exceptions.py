@@ -1,19 +1,19 @@
 
-class AccessModeException(Exception):
-    def __int__(self, args):
-        pass
+class ModeException(Exception):
 
-    def __str__(self):
-        mode = self.args[0]
-        return f'{mode} not valid, valid modes are ["test", "live"]'
+    def __init__(self, *args):
+        self.message = f"Payment gateway expected valid mode ('test', 'live')" \
+                       f" requested args: {args}"
+        super().__init__(self.message)
 
+class PaywixValidationException(Exception):
 
-class RequiredDataException(Exception):
+    def __init__(self, required_items, missing_items, pg, action):
+        self.required_items = required_items
+        self.missing_items = missing_items
+        self.pg = pg
+        self.action = action
+        self.message = f" {self.pg} required {self.required_items} to process {self.action}" \
+                       f" requested data missing: {self.missing_items}"
+        super().__init__(self.message)
 
-    def __init__(self, gateway, txn_type, params):
-        self.gateway = gateway
-        self.txn_type = txn_type
-        self.params = params
-
-    def __str__(self):
-        return f'To configure {self.txn_type} with {self.gateway} required {self.params}'

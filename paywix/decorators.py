@@ -1,22 +1,31 @@
 from functools import wraps
-from paywix.utils import required_data
-from paywix.exceptions import RequiredDataException
+from paywix.config import PAYU_CONFIGS
+from paywix.exceptions import PaywixValidationException
 
-
-class validate_params(object):
-
-    def __init__(self, req_cat, gateway, txn_type):
-        self.category = req_cat
-        self.gateway = gateway
-        self.txn_type = txn_type
-
-    def __call__(self, func):
+def validate_params(pg, action):
+    """
+        validate the function based on the args
+        args[0] => payment gateway
+        args[1] => action
+        Kwargs => requested params
+    """
+    def decorator(func):
         @wraps(func)
-        def callable(*args, **kwargs):
-            missing_data = [req_item for req_item in required_data.get(
-                self.category) if not kwargs.get(req_item)]
-            if len(missing_data) > 0:
-                raise RequiredDataException(
-                    self.gateway, self.txn_type, missing_data)
+        def wrapper(*args, **kwargs):
+            requested_cols, __mandatory_cols = [], []
+            if (pg == 'payu') and (action == 'transaction'):
+                __mandatory_cols = PAYU_CONFIGS[action]
+                for req_arg in __mandatory_cols:
+                    if not kwargs.get(req_arg):
+                        requested_cols.append(req_arg)
+
+            if len(requested_cols) != 0:
+                raise PaywixValidationException(
+                    __mandatory_cols,
+                    requested_cols,
+                    pg,
+                    action
+                )
             return func(*args, **kwargs)
-        return callable
+        return  wrapper
+    return decorator

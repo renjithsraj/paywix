@@ -5,13 +5,13 @@ In this document will give the detailed information about the payu configuration
 ------------
 ### Example Project for payu
 
-- [payu django 3.1.6](https://github.com/renjithsraj/paywix/blob/master/payu_django.md "payu django 3.1.6")
+- [payu django 4.0](https://github.com/renjithsraj/paywix/blob/master/payu_django.md "payu django 3.1.6")
 
 
 ### Setup account with PAYU setup account with PAYU
 
   - Create an account with Payu
-    + [Create Merchant Account](https://www.payumoney.com/merchant-dashboard/)
+    + [Create Merchant Account](https://onboarding.payu.in/app/account/signup)
   - Copy the Merchant Key and Merchant Salt for integrating Payment gateway
     + Make sure that the mode of the transaction is `test` , when you're testing
 
@@ -61,9 +61,9 @@ data = {
 txnid = "Create your transaction id"
 data.update({"txnid": txnid})
 payu_data = payu.transaction(**data)
-		
+
 ```
-The payu_data will contain all the required parameters for the payu payment transaction process,  we pass the given dictionary data into the `payu_checkout.html` page, the template I'm attaching with document, 
+The payu_data will contain all the required parameters for the payu payment transaction process,  we pass the given dictionary data into the `payu_checkout.html` page, the template I'm attaching with document,
 
 ``` html
 # payu_checkout.html
@@ -110,13 +110,13 @@ After the transaction payu will return to the provided the urls(success|failure)
 data = {k: v[0] for k, v in dict(request.POST).items()}
 response = payu.verify_transaction(data)
 
-response: 
+response:
      {"return_data": {"isConsentPayment": "0", "mihpayid": "250403759", "mode": "", "status": "failure", "unmappedstatus": "userCancelled", "key": "3o6jgxhp", "txnid": "tmk f23b118be0500854f90d", "amount": "10.00", "addedon": "2020-07-27 14:00:40", "productinfo": "test", "firstname": "renjith", "lastname": "", "address1": "dsf", "address2": "fsdf", "city": "sdf", "state": "", "country": "", "zipcode": "342341", "email": "renjith", "phone": "9746272610", "udf1": "", "udf2": "", "udf3": "", "udf4": "", "udf5": "", "udf6": "", "udf7": "", "udf8": "", "udf9": "", "udf10": "", "hash": "cdb80b5e3973fb048782152aa8b5a5fd9d58915578fec92cbd55780bc36821fb90f7741a251c01724903ea7ccc3c5fa3f5b16d4aa4255c62f3d4da707d357265", "field1": "", "field2": "", "field3": "", "field4": "", "field5": "", "field6": "", "field7": "", "field8": "", "field9": "Cancelled by user", "PG_TYPE": "PAISA", "bank_ref_num": "250403759", "bankcode": "PAYUW", "error": "E000", "error_Message": "No Error", "payuMoneyId": "250403759"}, "hash_string": "67bAgZX1B3|failure|||||||||||renjith|renjith|test|10.00|tmk f23b118be0500854f90d|3o6jgxhp", "generated_hash": "cdb80b5e3973fb048782152aa8b5a5fd9d58915578fec92cbd55780bc36821fb90f7741a251c01724903ea7ccc3c5fa3f5b16d4aa4255c62f3d4da707d357265", "recived_hash": "cdb80b5e3973fb048782152aa8b5a5fd9d58915578fec92cbd55780bc36821fb90f7741a251c01724903ea7ccc3c5fa3f5b16d4aa4255c62f3d4da707d357265", "hash_verified": true}
 ```
 
-### PAYU API Reference 
+### PAYU API Reference
 
-If you want to use API services for the Payu, you have to include the `auth_header` in the `Payu(auth_header="")` class, default value is `None`, 
+If you want to use API services for the Payu, you have to include the `auth_header` in the `Payu(auth_header="")` class, default value is `None`,
 
 #### Get Payment Response
 
@@ -219,7 +219,7 @@ payment_Resp = payu.getPaymentResponse({"ids": ['172b0970-d073-11ea-8a7c-f018985
   ],
   "status": "0"
 }
-``` 
+```
 
 #### Check Merchant Transaction Status
 
