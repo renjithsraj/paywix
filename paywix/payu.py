@@ -7,14 +7,13 @@ import requests
 from urllib import parse
 
 
-
-
 class Payu:
 
     # Hash Sequence for transaction
     __HASH_SEQUENCE = "key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|||||"
     __RESPONSE_SEQUENCE = "salt|status||||||udf5|udf4|udf3|udf2|udf1|email|firstname|productinfo|amount|txnid"
     __API_HASH_SEQUENCE = "key|command|var1"
+
     def __init__(self, merchant_key, merchant_salt, mode='Test'):
 
         self.key = merchant_key
@@ -40,9 +39,10 @@ class Payu:
                 hash_string += ''
             hash_string += '|'
         hash_string += self.salt
-        hash_value = hashlib.sha512(hash_string.encode('utf-8')).hexdigest().lower()
+        hash_value = hashlib.sha512(
+            hash_string.encode('utf-8')).hexdigest().lower()
         logging.info("Hash generation has completed")
-        return  hash_value
+        return hash_value
 
     def make_html(self, data):
         """
@@ -52,7 +52,7 @@ class Payu:
         request_payload = ['key', 'txnid', 'productinfo',
                            'amount', 'email', 'firstname', 'lastname', 'surl',
                            'surl', 'furl', 'phone', 'hash', 'udf1', 'udf2', 'udf3',
-                           'udf4','udf5'
+                           'udf4', 'udf5'
                            ]
         for input_val in request_payload:
             if data.get(input_val):
@@ -110,7 +110,8 @@ class Payu:
         hash_string += f'{self.key}'
         if add_charge:
             hash_string = f'{add_charge}|{hash_string}'
-        generated_hash = hashlib.sha512(hash_string.encode('utf-8')).hexdigest().lower()
+        generated_hash = hashlib.sha512(
+            hash_string.encode('utf-8')).hexdigest().lower()
         return hash_string, generated_hash
 
     def __error_codes(self, reqstd_code):
@@ -126,7 +127,8 @@ class Payu:
             Verify Transaction from Payu.
             Check the payment gateway response.
         """
-        hash_string, hash_value = self.__generate_response_hash(*args, **kwargs)
+        hash_string, hash_value = self.__generate_response_hash(
+            *args, **kwargs)
         response_hash = kwargs.get('hash')
         hash_response = {
             "hash_string": hash_string,
@@ -161,7 +163,8 @@ class Payu:
         for hash_str in hash_seq_list:
             hash_string += f"{str(kwargs.get(hash_str, ''))}|"
         hash_string += f'{self.salt}'
-        generated_hash = hashlib.sha512(hash_string.encode('utf-8')).hexdigest().lower()
+        generated_hash = hashlib.sha512(
+            hash_string.encode('utf-8')).hexdigest().lower()
         return hash_string, generated_hash
 
     def __make_request(self, method="POST", **kwargs):
@@ -176,7 +179,8 @@ class Payu:
             }
             payload = self.__payload_encode(**kwargs)
             url = PAYU_CONFIGS[f'api_{self.mode}']
-            response = requests.request(method, url, data=payload, headers=headers)
+            response = requests.request(
+                method, url, data=payload, headers=headers)
             return response.json()
         except requests.exceptions.HTTPError as http_error:
             raise Exception(f"Http Error: {str(http_error)}")
@@ -197,7 +201,8 @@ class Payu:
             reconcile with PayU’s database once you receive the response.
         """
         if len(kwargs.get('transaction_id')) == 0:
-            raise KeyError(" Requested data doesn't contains required field: transaction_id")
+            raise KeyError(
+                " Requested data doesn't contains required field: transaction_id")
         kwargs['command'] = "verify_payment"
         kwargs['var1'] = "|".join(kwargs.pop('transaction_id'))
         response = self.__make_request(**kwargs)
@@ -212,7 +217,8 @@ class Payu:
             whereas the input parameter in verify_payment API is the TxnID (Transaction ID generated at your end).
         """
         if not kwargs.get('payment_id'):
-            raise KeyError(f" Requested data doesn't contains required field: payment_id")
+            raise KeyError(
+                f" Requested data doesn't contains required field: payment_id")
         kwargs['command'] = "check_payment"
         kwargs['var1'] = kwargs.pop('payment_id')
         response = self.__make_request(**kwargs)
@@ -223,12 +229,12 @@ class Payu:
             This API is used to get the transaction response sent on surl/furl.
         """
         if not kwargs.get('transaction_id'):
-            raise KeyError(" Requested data doesn't contains required field: transaction_id")
+            raise KeyError(
+                " Requested data doesn't contains required field: transaction_id")
         kwargs['command'] = "get_ws_response"
         kwargs['var1'] = kwargs.pop('transaction_id')
         response = self.__make_request(**kwargs)
         return response
-
 
     def get_transaction_details(self, *args, **kwargs):
         """
@@ -243,14 +249,14 @@ class Payu:
 
         for key in ['date_from', 'date_to']:
             if not kwargs.get(key):
-                raise KeyError(f"To get transaction details required parameter is missing {key}")
+                raise KeyError(
+                    f"To get transaction details required parameter is missing {key}")
 
         kwargs['command'] = "get_Transaction_Details"
         kwargs['var1'] = kwargs.pop('date_from')
         kwargs['var2'] = kwargs.pop('date_to')
         response = self.__make_request(**kwargs)
         return response
-
 
     def get_transaction_info(self, *args, **kwargs):
         """
@@ -265,15 +271,14 @@ class Payu:
         """
         for key in ['date_time_from', 'date_time_to']:
             if not kwargs.get(key):
-                raise KeyError(f"To get transaction details required parameter is missing {key}")
+                raise KeyError(
+                    f"To get transaction details required parameter is missing {key}")
 
         kwargs['command'] = "get_transaction_info"
         kwargs['var1'] = kwargs.pop('date_time_from')
         kwargs['var2'] = kwargs.pop('date_time_to')
         response = self.__make_request(**kwargs)
         return response
-
-
 
     def get_tdr(self, *args, **kwargs):
         """
@@ -283,7 +288,8 @@ class Payu:
             to the output.
         """
         if len(kwargs.get('payment_id')) == 0:
-            raise KeyError(" Requested data doesn't contains required field: payment_id")
+            raise KeyError(
+                " Requested data doesn't contains required field: payment_id")
         kwargs['command'] = "get_TDR"
         kwargs['var1'] = kwargs.get('payment_id')
         response = self.__make_request(**kwargs)
@@ -313,7 +319,7 @@ class Payu:
                     "beneficiary_ifsc":""
                 }
         """
-        for col in  ['payment_id', 'refund_id', 'amount']:
+        for col in ['payment_id', 'refund_id', 'amount']:
             if not kwargs.get(col):
                 raise KeyError(f"{col} mandatory missing in request payload ")
 
@@ -341,6 +347,3 @@ class Payu:
         kwargs['command'] = "check_action_status"
         response = self.__make_request(**kwargs)
         return response
-
-
-
