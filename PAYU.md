@@ -3,9 +3,9 @@
 In this document will give the detailed information about the payu configuration for the python based applications.
 
 ------------
-### Example Project for payu
+### Example Project for payu with paywix
 
-- [payu django 4.0](https://github.com/renjithsraj/paywix/blob/master/payu_django.md "payu django 3.1.6")
+- [payu django 4.0](https://github.com/renjithsraj/paywix_ecommerce)
 
 
 ### Setup account with PAYU setup account with PAYU
@@ -20,343 +20,603 @@ In this document will give the detailed information about the payu configuration
 ### Initial setup
 
 ```python
-PAYU_CONFIG = {
-    "merchant_key": "******",
-    "merchant_salt": "******",
-    "mode": "test",
-    "success_url": "http://127.0.0.1:8000/success",
-    "failure_url": "http://127.0.0.1:8000/failure"
-}
+MERCHANT_KEY = "gtKFFx"
+MERCHANT_SALT = "4R38IvwiV57FwVpsgOvTXBdLE4tHUXFW"
+RESPONSE_URL_SUCCESS = "http://127.0.0.1:8000/payment_response_handler/"
+RESPONSE_URL_FAILURE = "http://127.0.0.1:8000/payment_response_handler/"
+
 ```
 | No  | keyname  |  description |
 | ------------ | ------------ | ------------ |
 |  1 |  merchant_key |   key provided from payu dashboard|
 | 2  |  mercahnt_salt |  salt provided from payu dashboard |
-|  3 |   mode|  transaction mode [TEST, LIVE] |
-|  4 |  success_url |   where we want to redirect after the success transaction|
-|  5 |   failure_url|  where we want to redirect after the failure transaction  |
+|  3 |   mode|  transaction mode [test, live] |
+|  4 |  RESPONSE_URL_SUCCESS |   where we want to redirect after the success transaction|
+|  5 |   RESPONSE_URL_FAILURE|  where we want to redirect after the failure transaction  |
 
-### Prepare paywix integration for payu transaction
+## Prepare paywix integration for payu transaction
 
 ``` python
 from paywix.payu import Payu
 
-payu_config = PAYU_CONFIG
-merchant_key = payu_config.get('merchant_key')
-merchant_salt = payu_config.get('merchant_salt')
-surl = payu_config.get('success_url')
-furl = payu_config.get('failure_url')
-mode = payu_config.get('mode')
-
 # Create payu instance
 payu = Payu(merchant_key, merchant_salt, surl, furl, mode)
-data = {
-    'amount': '10', 'firstname': 'renjith',
-    'email': 'renjithsraj@gmail.com',
-    'phone': '9746272610', 'productinfo': 'test',  'lastname': 'test', 'address1': 'test',
-    'address2': 'test', 'city': 'test',  'state': 'test', 'country': 'test',
-    'zipcode': 'tes', 'udf1': '', 'udf2': '', 'udf3': '', 'udf4': '', 'udf5': ''
-}
-# Make sure the transaction ID is unique
-txnid = "Create your transaction id"
-data.update({"txnid": txnid})
-payu_data = payu.transaction(**data)
+
+merchant_key = settings.MERCHANT_KEY
+merchant_salt = settings.MERCHANT_SALT
+payu = Payu(merchant_key, merchant_salt, "Test")
+```
+## Required Parameters Details for Transaction
+| No  | keyname  |  description | Mandatory
+| ------------ | ------------ | ------------ | ------------ |
+|  1 |  amount |   Amount | True |
+| 2  |  firstname |  Customer firstname | True|
+|  3 |   email |  Customer Email | True |
+|  4 |  phone |  Customer Phone Number| True |
+|  5 |   txnid|  Unique Transaction id  | True |
+| 6 | furl | Failure Redirect URL | True |
+| 7| surl| Success Redirect URL | True |
 
 ```
-The payu_data will contain all the required parameters for the payu payment transaction process,  we pass the given dictionary data into the `payu_checkout.html` page, the template I'm attaching with document,
+payload = {
+        "amount": "230",
+        "firstname": "Renjith",
+        "email": "renjithsraj91@gmail.com",
+        "phone": "9746272610",
+        "lastname": "s raj",
+        "productinfo": "ORDER FOR E_CART",
+        "txnid": "OR_123_45678_123",
+        "furl": RESPONSE_URL_FAILURE,
+        "surl": RESPONSE_URL_SUCCESS
+    }
+
+response = payu.transaction(**payload)  #transaction required keyword arguments
+```
+
+The `transaction` method will returns response for initiate transaction.
+#### Response for `transaction`
+
+``` json
+{
+  'amount': '749.99',
+  'firstname': 'Renjith',
+  'email': 'renjithsraj@live.com',
+  'phone': '9746272610',
+  'lastname': 'S Raj',
+  'productinfo': '21_fe68a0676df144a688fb287b3c4835fe',
+  'txnid': '21_fe68a0676df144a688fb287b3c4835fe',
+  'furl': 'http://127.0.0.1:8000/payment_response_handler/',
+  'surl': 'http://127.0.0.1:8000/payment_response_handler/',
+  'key': 'gtKFFx',
+  'hash': 'a76f15a7a05ec50069192ccece89a7b76344a85fdb8b9b5dff9b82b47e2c5167e7104a4a7cfb8dea961bd97be68c2e5acd19b8fa85dd5676becb339516d8c12a',
+  'action': 'https://test.payu.in/_payment'
+}
+```
+#### `transaction` response in HTML Format
+
+To get the html response, use `make_html` method with response from `transaction`
+
+``` python
+data = "Response from `transaction` "
+html = payu.make_html(data) ## required paramter in dict format
+```
+
+#### Response `make_html` 
+We can use below html in httpresponse, so the system will redirect to payu payment gateway
+page.
 
 ``` html
-# payu_checkout.html
-  <html>
-  <head>
-      <title>Loading...</title>
-  </head>
-
-  <body onload="document.payuForm.submit()">
-      <form action={{ posted.action }} method="post" name="payuForm">
-          <input type="hidden" name="key" value="{{posted.key}}" />
-          <input type="hidden" name="hash_string" value="{{ posted.hash_string }}" />
-          <input type="hidden" name="hash" value="{{ posted.hashh }}" />
-          <input type="hidden" name="posted" value="{{ posted }}" />
-          <input type="hidden" name="txnid" value="{{ posted.txnid }}" />
-          <input type="hidden" name="amount" value="{{ posted.amount|default:'' }}" /></td>
-          <input type="hidden" name="firstname" id="firstname" value="{{ posted.firstname|default:'' }}" /></td>
-          <input type="hidden" name="email" id="email" value="{{ posted.email|default:'' }}" /></td>
-          <input type="hidden" name="phone" value="{{ posted.phone|default:'' }}" /></td>
-          <textarea type="hidden" name="productinfo" style="display:none;">{{ posted.productinfo|default:'' }}</textarea>
-          </td>
-          <input type="hidden" name="surl" value="{{ posted.surl }}" size="64" /></td>
-          <input type="hidden" name="furl" value="{{ posted.furl }}" size="64" /></td>
-          <input type="hidden" name="service_provider" value="{{posted.service_provider}}" size="64" />
-          <input type="hidden" name="lastname" id="lastname" value="{{ posted.lastname }}" /></td>
-          <input type="hidden" name="address1" value="{{ posted.address1 }}" /></td>
-          <input type="hidden" name="address2" value="{{ posted.address2 }}" /></td>
-          <input type="hidden" name="city" value="{{ posted.city }}" /></td>
-          <input type="hidden" name="state" value="{{ posted.state }}" /></td>
-          <input type="hidden" name="country" value="{{ posted.country }}" /></td>
-          <input type="hidden" name="zipcode" value="{{ posted.zipcode }}" /></td>
-          <input type="hidden" name="udf1" value="{{ posted.udf1 }}" /></td>
-          <input type="hidden" name="udf2" value="{{ posted.udf2 }}" /></td>
-          <input type="hidden" name="udf3" value="{{ posted.udf3 }}" /></td>
-          <input type="hidden" name="udf4" value="{{ posted.udf4 }}" /></td>
-          <input type="hidden" name="udf5" value="{{ posted.udf5 }}" /></td>
-      </form>
-  </body>
-  </html>
-```
-After the transaction payu will return to the provided the urls(success|failure). in the function we have to verify the response with `verify_transaction` function. example given below.
-
-```python
-data = {k: v[0] for k, v in dict(request.POST).items()}
-response = payu.verify_transaction(data)
-
-response:
-     {"return_data": {"isConsentPayment": "0", "mihpayid": "250403759", "mode": "", "status": "failure", "unmappedstatus": "userCancelled", "key": "3o6jgxhp", "txnid": "tmk f23b118be0500854f90d", "amount": "10.00", "addedon": "2020-07-27 14:00:40", "productinfo": "test", "firstname": "renjith", "lastname": "", "address1": "dsf", "address2": "fsdf", "city": "sdf", "state": "", "country": "", "zipcode": "342341", "email": "renjith", "phone": "9746272610", "udf1": "", "udf2": "", "udf3": "", "udf4": "", "udf5": "", "udf6": "", "udf7": "", "udf8": "", "udf9": "", "udf10": "", "hash": "cdb80b5e3973fb048782152aa8b5a5fd9d58915578fec92cbd55780bc36821fb90f7741a251c01724903ea7ccc3c5fa3f5b16d4aa4255c62f3d4da707d357265", "field1": "", "field2": "", "field3": "", "field4": "", "field5": "", "field6": "", "field7": "", "field8": "", "field9": "Cancelled by user", "PG_TYPE": "PAISA", "bank_ref_num": "250403759", "bankcode": "PAYUW", "error": "E000", "error_Message": "No Error", "payuMoneyId": "250403759"}, "hash_string": "67bAgZX1B3|failure|||||||||||renjith|renjith|test|10.00|tmk f23b118be0500854f90d|3o6jgxhp", "generated_hash": "cdb80b5e3973fb048782152aa8b5a5fd9d58915578fec92cbd55780bc36821fb90f7741a251c01724903ea7ccc3c5fa3f5b16d4aa4255c62f3d4da707d357265", "recived_hash": "cdb80b5e3973fb048782152aa8b5a5fd9d58915578fec92cbd55780bc36821fb90f7741a251c01724903ea7ccc3c5fa3f5b16d4aa4255c62f3d4da707d357265", "hash_verified": true}
+<html>
+   <body>
+      <formaction='https://test.payu.in/_payment'method='post'id='payuform'>
+      <input type="hidden"name="key"value="gtKFFx"/>
+      <input type="hidden"name="txnid"value="21_fe68a0676df144a688f"/>
+      <input type="hidden"name="productinfo"value="21_fe68a0676df144a688"/>
+      <input type="hidden"name="amount"value="749.99"/>
+      <input type="hidden"name="email"value="renjithsraj@live.com"/>
+      <input type="hidden"name="firstname"value="Renjith"/>
+      <input type="hidden"name="lastname"value="SRaj"/>
+      <input type="hidden"name="surl"value="http://127.0.0.1:8000/success/"/>
+      <input type="hidden"name="furl"value="http://127.0.0.1:8000/failure/"/>
+      <input type="hidden"name="phone"value="9746272610"/>
+      <input type="hidden"name="hash"value="a76f15a7a05ec50069192ccece89a7b76344a85fdb8b9b5dff9b82b47e2c5167e7104a4a7cfb8dea961bd97be68c2e5acd19b8fa85dd5676becb339516d8c12a"/></form><script>window.onload=function(){
+         document.forms[
+           'payuform'
+         ].submit()
+         }
+      </script>
+   </body>
+</html>
 ```
 
-### PAYU API Reference
+## Verify Payment Response from PAYU
 
-If you want to use API services for the Payu, you have to include the `auth_header` in the `Payu(auth_header="")` class, default value is `None`,
+PayU will post the transaction details to the specified success URL (sURL) or failure URL (fURL) after the transaction has been processed. These URLs are specified during the transaction initialization process and are used to redirect the customer to the appropriate page on the merchant's website, depending on the outcome of the transaction.
 
-#### Get Payment Response
 
-This API can be used by the merchant to get the response details of the transaction(s) done using PayUmoney.
-
-ID | PARAM | Description | type | mandatory|
----|-------|-------------|------|----------|
-1 | required_data  | Mandataory Details {"ids": <merchant transaction ids>(list)}| dict | Yes
-2 | optionals | optionals data `{"from_date":, "to_date":, "count":}`| dict | No
-
-> Sample for Getpayment response function
-
-```python
-payment_Resp = payu.getPaymentResponse({"ids": ['172b0970-d073-11ea-8a7c-f0189853078a']})
+``` json
+{
+  'mihpayid': '403993715528233750',
+  'mode': 'CC',
+  'status': 'success',
+  'unmappedstatus': 'captured',
+  'key': 'gtKFFx',
+  'txnid': '22_0b62608a093c428887d996df967c6622',
+  'amount': '179.00',
+  'cardCategory': 'domestic',
+  'discount': '0.00',
+  'net_amount_debit': '179',
+  'addedon': '2023-02-02 10:08:57',
+  'productinfo': '22_0b62608a093c428887d996df967c6622',
+  'firstname': 'renjith',
+  'lastname': 's raj',
+  'address1': '',
+  'address2': '',
+  'city': '',
+  'state': '',
+  'country': '',
+  'zipcode': '',
+  'email': 'renjithsraj@live.com',
+  'phone': '9746272610',
+  'udf1': '',
+  'udf2': '',
+  'udf3': '',
+  'udf4': '',
+  'udf5': '',
+  'udf6': '',
+  'udf7': '',
+  'udf8': '',
+  'udf9': '',
+  'udf10': '',
+  'hash': 'fb0e269ca7f377d83efb31144b6e37336e00e613cc44ce56fab2535c1dcbcd4e4fda46a9ba06599fb1e651001c994b88d6cf08825526f67dc709bd022fdfa621',
+  'field1': '',
+  'field2': '',
+  'field3': '',
+  'field4': '',
+  'field5': '',
+  'field6': '',
+  'field7': '',
+  'field8': '',
+  'field9': 'Transaction Completed Successfully',
+  'payment_source': 'payu',
+  'PG_TYPE': '',
+  'bank_ref_num': 'ae1b30b6-76f5-41e2-aa39-8c41985c003f',
+  'bankcode': 'CC',
+  'error': 'E000',
+  'error_Message': 'No Error',
+  'cardnum': 'XXXXXXXXXXXX2346',
+  'cardhash': 'This field is no longer supported in postback params.',
+  'issuing_bank': 'UNKNOWN',
+  'card_type': 'UNKNOWN'
+}
 ```
-> Response
+
+## Verify the payment response from payu
+``` python
+response = payu.check_transaction(**data)
+```
+#### Verify `response` from `check_transaction`
 
 ```json
 {
-  "errorCode": "",
-  "message": "All txnIds are valid",
-  "responseCode": "",
-  "result": [
-    {
-      "merchantTransactionId": "396132-58876806",
-      "postBackParam": {
-        "addedon": "2017-04-26T15:22:05.000Z",
-        "additionalCharges": "6.1",
-        "additional_param": "",
-        "address1": "",
-        "address2": "",
-        "amount": "100.0",
-        "amount_split": "{\"PAYU\":\"106.1\"}",
-        "bank_ref_num": "1182885976",
-        "bankcode": "MAST",
-        "calledStatus": "false",
-        "cardToken": "",
-        "card_merchant_param": "",
-        "card_type": "",
-        "cardhash": "This field is no longer supported in postback params.",
-        "cardnum": "500446XXXXXX0000",
-        "city": "",
-        "country": "",
-        "createdOn": "1493200111000",
-        "discount": "0.00",
-        "email": "test@email.com",
-        "encryptedPaymentId": "",
-        "error": "E000",
-        "error_Message": "No Error",
-        "fetchAPI": "",
-        "field1": "",
-        "field2": "",
-        "field3": "",
-        "field4": "",
-        "field5": "",
-        "field6": "",
-        "field7": "",
-        "field8": "",
-        "field9": "",
-        "firstname": "Tom Jude",
-        "hash": "9a5e632d332c11eb74f8a76ba3dcccd0548f1f26a73bc2541f85198a3cf0eb948ad8caff6b0921ae9a11aa7648c70f0a87ac29d09790ba2f1c31d48823ba9a85",
-        "key": "40747T",
-        "lastname": "",
-        "meCode": "{\"tranportalid\":\"90000970\",\"pg_alias\":\"90000970\",\"pg_name\":\"hdfctraveltesting\",\"tranportalpwd\":\"password\"}",
-        "mihpayid": "70000000688113",
-        "mode": "DC",
-        "name_on_card": "Tom",
-        "net_amount_debit": "106.1",
-        "offer_availed": "",
-        "offer_failure_reason": "",
-        "offer_key": "",
-        "offer_type": "",
-        "paisa_mecode": "",
-        "paymentId": "58876806",
-        "payuMoneyId": "58876806",
-        "pg_TYPE": "HDFCPG",
-        "pg_ref_no": "",
-        "phone": "6121212232",
-        "postBackParamId": "39803778",
-        "postUrl": "https://test.payumoney.com/customer/dashboard/#/payment/notification/success",
-        "productinfo": "productInfo",
-        "state": "",
-        "status": "sucess",
-        "txnid": "396132-58876806",
-        "udf1": "",
-        "udf10": "",
-        "udf2": "",
-        "udf3": "",
-        "udf4": "",
-        "udf5": "",
-        "udf6": "",
-        "udf7": "",
-        "udf8": "",
-        "udf9": "",
-        "unmappedstatus": "captured",
-        "version": "",
-        "zipcode": ""
-      }
+  'hash_response': {
+    'hash_string': '4R38IvwiV57FwVpsgOvTXBdLE4tHUXFW|success|||||||||||renjithsraj@live.com|renjith|22_0b62608a093c428887d996df967c6622|179.00|22_0b62608a093c428887d996df967c6622|gtKFFx',
+    'hash_value': 'fb0e269ca7f377d83efb31144b6e37336e00e613cc44ce56fab2535c1dcbcd4e4fda46a9ba06599fb1e651001c994b88d6cf08825526f67dc709bd022fdfa621',
+    'is_hash_verified': True
+  },
+  'all_response': { ## same response from payu ## },
+  'payment_response': {
+    'mihpayid': '403993715528233750',
+    'status': 'success',
+    'error': 'NO_ERROR',
+    'mode': 'CC',
+    'bank_code': 'Credit Card',
+    'payment_source': 'payu',
+    'transaction_msg': 'Transaction Completed Successfully',
+    'transaction_id': '22_0b62608a093c428887d996df967c6622'
+  }
+}
+```
+ID | response key | Description | type |
+---|-------|-------------|------|
+1 | hash_response | How Hash value calcuation in paywix | dict
+2 | all_response | Actual payment response from payu | dict
+3| payment_response | Important things to remember for future use | dict
+
+
+## Verify Payment with Payment ID
+This API gives you the status of the transaction.
+
+transaction_id => Unique Transaction id generated while initializing transaction.
+``` python
+verify_payment_data = {
+    'transaction_id': ['20_95e00e4941c94ac5a124989b8c5a9dba']
+}
+verify_payment_resp = payu.verify_payment(**verify_payment_data)
+```
+### Verifyment `verify_payment` response
+``` json
+{
+        'status': 1,
+        'msg': '1 out of 1 Transactions Fetched Successfully',
+        'transaction_details': {
+            '20_95e00e4941c94ac5a124989b8c5a9dba': {
+                'mihpayid': '403993715528207372',
+                'request_id': '',
+                'bank_ref_num': 'da5780ef-c69b-44df-b625-bdae45c1a358',
+                'amt': '1074.00',
+                'transaction_amount': '1074.00',
+                'txnid': '20_95e00e4941c94ac5a124989b8c5a9dba',
+                'additional_charges': '0.00',
+                'productinfo': '20_95e00e4941c94ac5a124989b8c5a9dba',
+                'firstname': 'renjith',
+                'bankcode': 'CC',
+                'udf1': None,
+                'udf3': None,
+                'udf4': None,
+                'udf5': None,
+                'field2': None,
+                'field9': 'Transaction Completed Successfully',
+                'error_code': 'E000',
+                'addedon': '2023-01-29 12:13:10',
+                'payment_source': 'payu',
+                'card_type': 'MAST',
+                'error_Message': 'NO ERROR',
+                'net_amount_debit': 1074,
+                'disc': '0.00',
+                'mode': 'CC',
+                'PG_TYPE': 'CC-PG',
+                'card_no': 'XXXXXXXXXXXX2346',
+                'name_on_card': None,
+                'udf2': None,
+                'field5': None,
+                'field7': None,
+                'status': 'success',
+                'unmappedstatus': 'captured',
+                'Merchant_UTR': None,
+                'Settled_At': '0000-00-00 00:00:00'
+            }
+        }
     }
-  ],
-  "status": "0"
-}
 ```
 
-#### Check Merchant Transaction Status
+## check_payment 
+This API gives you the status of the transaction similar to verify_payment API. The only difference is that the input parameter in this is payment_id from payu.
 
-This API can be used by a merchant to reconcile/get update status of the transaction(s) with PayUmoney.
-
-
-ID | PARAM | Description | type | mandatory|
----|-------|-------------|------|----------|
-1 | required_data  | Mandataory Details {"ids": <merchant transaction ids>(list)}| dict | Yes
-
-> Sample Check Merchant Transaction
+`payment_id => PayUID (MihpayID) generated at PayU’s`
 
 ```python
-payment_Resp = payu.chkMerchantTxnStatus({"ids": ['172b0970-d073-11ea-8a7c-f0189853078a', '172b0970-d073-11ea-8a7c-f0189853078a']})
+check_payment_data = {
+    'payment_id': "403993715528207372"
+}
+check_payment_resp = payu.check_payment(**check_payment_data)
 ```
-```json
+### check_payment response
+
+``` json
 {
-  "errorCode": "",
-  "message": "All txnIds are valid",
-  "responseCode": "",
-  "result": {
-    "amount": "106.1",
-    "merchantTransactionId": "396132-58876806",
-    "paymentId": "58876806",
-    "status": "Money with Payumoney"
-  },
-  "status": "0"
+  'status': 1,
+  'msg': 'Transaction Fetched Successfully',
+  'transaction_details': {
+    'request_id': '135006457',
+    'bank_ref_num': 'da5780ef-c69b-44df-b625-bdae45c1a358',
+    'net_amount': None,
+    'mihpayid': 403993715528207372,
+    'amt': '1074.00',
+    'disc': '0.00',
+    'mode': 'CC',
+    'txnid': '20_95e00e4941c94ac5a124989b8c5a9dba',
+    'amount': '1074.00',
+    'amount_paid': '1074.00',
+    'discount': '0.00',
+    'additional_charges': '0.00',
+    'udf1': None,
+    'udf2': None,
+    'udf3': None,
+    'udf4': None,
+    'udf5': None,
+    'field1': None,
+    'field2': None,
+    'field3': None,
+    'field4': None,
+    'field5': None,
+    'field6': None,
+    'field7': None,
+    'field8': None,
+    'field9': 'Transaction Completed Successfully',
+    'addedon': '2023-01-29 12:13:10',
+    'status': 'success',
+    'net_amount_debit': 1074,
+    'unmappedstatus': 'captured',
+    'firstname': 'renjith',
+    'bankcode': 'CC',
+    'productinfo': '20_95e00e4941c94ac5a124989b8c5a9dba',
+    'payment_source': 'payu',
+    'name_on_card': None,
+    'card_no': 'XXXXXXXXXXXX2346',
+    'PG_TYPE': 'Test PG',
+    'Merchant_UTR': None,
+    'Settled_At': None
+  }
 }
 ```
 
-<aside class="warning"> Refund Related API only works in  lie </aside>
+## get_wsonline_response
+This API is used to get the transaction response sent on surl/furl.
 
+`transaction_id => unique id generated at the time of payment initialization`
 
-#### Refund Payment API
-This API can be used by the merchant to initiate a partial or full refund for any successful transaction.
-
-
-ID | PARAM | Description | type | mandatory|
----|-------|-------------|------|----------|
-1 | required_data  | Mandataory Details {"payu_id": <transaction id from payu>, "amount": <>}| dict | Yes
-
-> Sample Refund Payment API
-
-```python
-    refund_amount = payu.refundPayment({'payu_id': 58872009, 'amount': 5})
+``` python
+get_wsonline_data = {
+    'transaction_id': '20_95e00e4941c94ac5a124989b8c5a9dba'
+}
+get_wsonline_resp = payu.get_wsonline_response()(**get_wsonline_data)
 ```
-```json
+### `get_wsonline_resp` response
+
+``` json
 {
-  "errorCode": "",
-  "guid": "",
-  "message": "Refund Initiated",
-  "result": "190651",
-  "rows": "0",
-  "sessionId": "",
-  "status": "0"
+  'status': 1,
+  'msg': '12 out of 32 Transactions Fetched Successfully',
+  'transaction_details': {
+    '5': {
+      'mihpayid': '403993715510372248',
+      'request_id': '',
+      'bank_ref_num': '4747839251343141',
+      'amt': '0.00',
+      'transaction_amount': '458.00',
+      'txnid': '5',
+      'additional_charges': '0.00',
+      'productinfo': '10092-Oriflame Tender Care Cherry Protecting Balm-22879  ',
+      'firstname': 'Rajesh Goel',
+      'bankcode': 'CC',
+      'udf1': '5',
+      'udf3': None,
+      'udf4': None,
+      'udf5': None,
+      'field2': '999999',
+      'field9': 'SUCCESS',
+      'error_code': 'E000',
+      'addedon': '2014-11-10 13:24:12',
+      'payment_source': 'payu',
+      'card_type': 'UNKNOWN',
+      'error_Message': 'NO ERROR',
+      'net_amount_debit': 458,
+      'disc': '0.00',
+      'mode': 'CC',
+      'PG_TYPE': 'CC-PG',
+      'card_no': '512345XXXXXX2346',
+      'name_on_card': 'Amar',
+      'udf2': '1031',
+      'field5': None,
+      'field7': '',
+      'status': 'success',
+      'unmappedstatus': 'captured',
+      'Merchant_UTR': None,
+      'Settled_At': '0000-00-00 00:00:00'
+    }
 }
 ```
 
-#### Get Refund Details by Refund Id
+## get_transaction_details 
 
-This API returns all the refund details of a particular refund done using the Refund API or the Payumoney panel.
+This Method is used to extract the transaction details between two given time periods.
+`date_from => start_date`
+`date_to => end_date`
 
-ID | PARAM | Description | type | mandatory|
----|-------|-------------|------|----------|
-1 | required_data  | Mandataory Details {"refund_id": <response from refund api>| dict | Yes
+> date_from and date_to should 7 days interval
 
-> Sample Get Refund Details by Refund Id
 
-```python
-    rrefund_details_1 = payu.getRefundDetails({'refund_id': 190783})
+``` python
+get_transction_details_payload = {
+    'date_from': "2023-01-29",
+    'date_to': "2023-01-30"
+}
+transaction_resp = payu.get_transaction_details(**get_transction_details_payload)
 ```
-response
-```json
+### `transaction_resp` response for `get_transaction_details`
+
+``` json
 {
-  "errorCode": "",
-  "guid": "",
-  "message": "Refund Details :",
-  "result": {
-    "PaymentId": "58876807",
-    "Refund Amount": "1.0",
-    "Refund Completed On": "null",
-    "Refund Created On": "2017-04-26T15:59:51.000Z",
-    "Refund Status": "refundinprogress",
-    "RefundId": "190783",
-    "Total Amount": "1.06"
-  },
-  "rows": "0",
-  "sessionId": "",
-  "status": "0"
+    'status': 1,
+    'msg': 'Transaction Fetched Successfully',
+    'Transaction_details': [
+        {
+            'id': '403993715528206610',
+            'status': 'failed',
+            'key': 'gtKFFx',
+            'merchantname': 'PayU Test Account',
+            'txnid': 'TRXN20230129001212661',
+            'firstname': 'qwer',
+            'lastname': None,
+            'addedon': '2023-01-29 00:12:17',
+            'bank_name': 'Test Credit Card',
+            'payment_gateway': 'Test PG',
+            'phone': '',
+            'email': 'test1@tester.com',
+            'transaction_fee': '136.50',
+            'amount': '136.50',
+            'discount': '0.00',
+            'additional_charges': '0.00',
+            'productinfo': ' 003 ',
+            'error_code': 'E500',
+            'bank_ref_no': None,
+            'ibibo_code': 'CC',
+            'mode': 'CC',
+            'ip': '122.162.146.171',
+            'card_no': 'XXXXXXXXXXXX1111',
+            'cardtype': 'domestic',
+            'offer_key': '',
+            'field0': None,
+            'field1': None,
+            'field2': None,
+            'field3': None,
+            'field4': None,
+            'field5': None,
+            'field6': None,
+            'field7': None,
+            'field8': None,
+            'field9': 'invalid input',
+            'udf1': None,
+            'udf2': None,
+            'udf3': None,
+            'udf4': None,
+            'udf5': None,
+            'address2': '',
+            'city': '',
+            'zipcode': '',
+            'pg_mid': None,
+            'issuing_bank': '',
+            'offer_type': None,
+            'failure_reason': None,
+            'mer_service_fee': None,
+            'mer_service_tax': None
+        }
+    ]
 }
 ```
 
-#### Get Refund Details by Payment Id
+## get_transaction_info 
+This Method works exactly the same way as get_Transaction_Details API. The only enhancement is that this API can take input as the exact time in terms of minutes and seconds also, `date_time_from` and `date_time_to` are starting & end dates of transactions with time, respectively.
 
-This API returns details of all refunds for a payment done through Payumoney.
+`date_time_from => datetime from`
+`date_time_to => datetime to`
 
-
-ID | PARAM | Description | type | mandatory|
----|-------|-------------|------|----------|
-1 | required_data  | Mandataory Details {"payu_id": <transaction id from payu>| dict | Yes
-
-> Sample Get Refund Details by Payment Id
-
-```python
-    rrefund_details = payu.getRefundDetailsByPayment({'payu_id': 190783})
-
+``` python
+get_transaction_payload = {
+    'date_time_from': "2023-01-29 16:00:00",
+    'date_time_to': "2023-01-29 18:00:00"
+}
+get_transaction_resp = payu.get_transaction_info(**get_transaction_payload)
 ```
-response
-```json
+
+###  response for `get_transaction_info`
+
+``` json
 {
-  "errorCode": "",
-  "guid": "",
-  "message": "Refund Details :",
-  "result": {
-    "PaymentId": "58876807",
-    "Amount Left": "1266.0",
-    "Refund Details Map": "[{RefundId=190783, Refund Amount=10.0, Refund Completed On=null, Refund Status=refundinprogress, Refund Created On=2017-04-26 15:59:51.0}]",
-    "Total Amount": "1276.0"
-  },
-  "rows": "0",
-  "sessionId": "",
-  "status": "0"
+    'status': 1,
+    'msg': 'Transaction Fetched Successfully',
+    'Transaction_details': [
+        {
+            'id': '403993715528207724',
+            'action': 'failed',
+            'status': None,
+            'issuing_bank': None,
+            'transaction_fee': '1.00',
+            'key': 'gtKFFx',
+            'merchantname': 'PayU Test Account',
+            'txnid': '232c9852ab9b6bb8ceb0',
+            'firstname': 'BL Mandawaliya',
+            'lastname': None,
+            'addedon': '2023-01-29 16:28:19',
+            'bank_name': 'Generic Intent',
+            'payment_gateway': 'AXISU',
+            'phone': '9009009001',
+            'email': 'blmindore1@gmail.com',
+            'amount': '1.00',
+            'discount': '0.00',
+            'additional_charges': '0.00',
+            'productinfo': 'Ok Recharge Load Wallet Money Rs.1.0',
+            'error_code': 'E4197',
+            'bank_ref_no': None,
+            'ibibo_code': 'INTENT',
+            'mode': 'UPI',
+            'ip': '202.148.59.59',
+            'card_no': None,
+            'cardtype': None,
+            'offer_key': '',
+            'field0': None,
+            'field1': None,
+            'field2': None,
+            'field3': None,
+            'field4': None,
+            'field5': None,
+            'field6': None,
+            'field7': 'TRANSACTION ID IS NOT PRESENT|U48',
+            'field8': None,
+            'field9': 'U48|TRANSACTION ID IS NOT PRESENT|Completed Using Verify API',
+            'udf1': '',
+            'udf2': '',
+            'udf3': '',
+            'udf4': '',
+            'udf5': '',
+            'address2': '',
+            'city': '',
+            'zipcode': '',
+            'pg_mid': None,
+            'offer_type': None,
+            'failure_reason': None,
+            'mer_service_fee': None,
+            'mer_service_tax': None
+        }]
+    }
+```
+
+## refund
+This method provides to make refund for the transaction
+
+`payment_id`: This parameter must contain the Payu ID (mihpayid) of the transaction.
+`refund_id`: This parameter must contain the Token ID (unique token from the merchant) for the refund request.
+`callback_url`: If a refund callback for a transaction is required on a specific URL, the URL must be specified in this parameter.
+`instant_refund`: This parameter must contain the details of customer and funds need to be
+    credited in a JSON format.
+    ``` json 
+    {
+        "refund_mode":"2",
+        "beneficiary_full_name":"",
+        "beneficiary_account":"",
+        "beneficiary_ifsc":""
+    }
+    ```
+Mandatory parameters
+
+`payment_id`
+`refund_id`
+`amount`
+
+``` python
+    payload = {
+        'payment_id': "403993715528207372",
+        "refund_id": "12334qwe45",
+        "amount": "100.0"
+    }
+    refund_resp = payu.refund(**payload)
+```
+
+### Response for `refund` 
+
+``` json
+{
+    'status': 1, 
+    'msg': 'Refund Request Queued', 
+    'request_id': '135018119', 
+    'bank_ref_num': None, 
+    'mihpayid': 403993715528207372, 
+    'error_code': 102
 }
 ```
 
+# refund_status
+This method used to check the status of the refund or cancel requests.
 
+`refund_id => Unique ID generated for making refund transaction ` 
 
+``` python
+payload = {
+        "refund_id": "12334qwe45"
+    }
+refund_status = payu.refund_status(**payload)
 
+```
 
+### Response for `refund_status`
 
-
-
-
-
-
-
-
-
-
-
+``` json
+{
+    'status': 0, 
+    'msg': '0 out of 1 Transactions Fetched Successfully',
+    'transaction_details': {
+        '12334qwe45': 'No action status found'
+    }
+}
+```
