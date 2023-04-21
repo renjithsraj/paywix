@@ -1,6 +1,13 @@
+## PLEASE USE YOUR CREDENTIALS WHILE MAKING TRANSACTIONS, SOME PEOPLE ARE USING MY CREDENTIALS AND DETAILS, NOW I"M FEELING I HAVE DID A BIG MISTAKE
+
+
 ## PAYWIX with Payu
 
+
+
 In this document will give the detailed information about the payu configuration for the python based applications.
+
+
 
 ------------
 ### Example Project for payu with paywix
@@ -109,16 +116,16 @@ page.
 <html>
    <body>
       <formaction='https://test.payu.in/_payment'method='post'id='payuform'>
-      <input type="hidden"name="key"value="gtKFFx"/>
-      <input type="hidden"name="txnid"value="21_fe68a0676df144a688f"/>
-      <input type="hidden"name="productinfo"value="21_fe68a0676df144a688"/>
-      <input type="hidden"name="amount"value="749.99"/>
-      <input type="hidden"name="email"value="renjithsraj@live.com"/>
+      <input type="hidden"name="key"value=""/>
+      <input type="hidden"name="txnid"value=""/>
+      <input type="hidden"name="productinfo"value=""/>
+      <input type="hidden"name="amount"value=""/>
+      <input type="hidden"name="email"value=""/>
       <input type="hidden"name="firstname"value="Renjith"/>
       <input type="hidden"name="lastname"value="SRaj"/>
       <input type="hidden"name="surl"value="http://127.0.0.1:8000/success/"/>
       <input type="hidden"name="furl"value="http://127.0.0.1:8000/failure/"/>
-      <input type="hidden"name="phone"value="9746272610"/>
+      <input type="hidden"name="phone"value=""/>
       <input type="hidden"name="hash"value="a76f15a7a05ec50069192ccece89a7b76344a85fdb8b9b5dff9b82b47e2c5167e7104a4a7cfb8dea961bd97be68c2e5acd19b8fa85dd5676becb339516d8c12a"/></form><script>window.onload=function(){
          document.forms[
            'payuform'
@@ -156,8 +163,8 @@ PayU will post the transaction details to the specified success URL (sURL) or fa
   'state': '',
   'country': '',
   'zipcode': '',
-  'email': 'renjithsraj@live.com',
-  'phone': '9746272610',
+  'email': '',
+  'phone': '',
   'udf1': '',
   'udf2': '',
   'udf3': '',
