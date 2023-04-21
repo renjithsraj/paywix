@@ -61,8 +61,8 @@ payu = Payu(merchant_key, merchant_salt, "Test")
 payload = {
         "amount": "230",
         "firstname": "Renjith",
-        "email": "renjithsraj91@gmail.com",
-        "phone": "9746272610",
+        "email": "888888@hmil.com",
+        "phone": "88888888888",
         "lastname": "s raj",
         "productinfo": "ORDER FOR E_CART",
         "txnid": "OR_123_45678_123",
@@ -80,8 +80,8 @@ The `transaction` method will returns response for initiate transaction.
 {
   'amount': '749.99',
   'firstname': 'Renjith',
-  'email': 'renjithsraj@live.com',
-  'phone': '9746272610',
+  'email': '',
+  'phone': '',
   'lastname': 'S Raj',
   'productinfo': '21_fe68a0676df144a688fb287b3c4835fe',
   'txnid': '21_fe68a0676df144a688fb287b3c4835fe',
